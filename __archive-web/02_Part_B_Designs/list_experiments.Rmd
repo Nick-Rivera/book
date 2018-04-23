@@ -1,0 +1,173 @@
+
+```{r,echo=FALSE, eval=FALSE, message=FALSE, warning = FALSE, error = FALSE, results = "hide"}
+tempR <- tempfile(fileext = ".R")
+library(knitr)
+purl("../index.Rmd", output = tempR)
+source(tempR)
+unlink(tempR)
+```
+
+## List Experiments
+
+When studying a descriptive question through surveys asking about self-reported attitudes and behaviors, we rely on the assumption that respondents tell the truth. Respondents may not answer truthfully in the presence of social desirability --- the desire to conform to a socially-expected response --- or fears of legal sanctions, for example. In such cases, standard survey estimates based on direct questions will be biased. One class of solutions to this problem is to obscure individual responses, providing protection from social or legal pressures and giving cover to respondents to answer truthfully. When we obscure responses systematically through an experiment, we can often still identify average quantities of interest. The list experiment is one such design, which works by obscuring individual-level responses through aggregation.
+
+During the 2016 Presidential Election in the U.S., some observers were concerned that pre-election estimates of support for Donald Trump might have been downwardly biased by "Shy Trump Supporters" -- survey respondents who supported Trump in their hearts, but were embarrased to admit it to pollsters. To assess this possibility, Coppock (2017) obtained estimates of Trump support that were free of social desirability bias using a list experiment. Subjects in the control and treatment groups were asked: "Here is a list of [three/four] things that some people would do and some people would not. Please tell me HOW MANY of them you would do. We do not want to know which ones of these you would do, just how many. Here are the [three/four] things:"
+
+| Control                                                                                           | Treatment                                                                                                                                                                |
+| ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| If it were up for a vote, I would vote to raise the minimum wage to 15 dollars an hour            | If it were up for a vote, I would vote to raise the minimum wage to 15 dollars an hour                                                                                   |
+| If it were up for a vote, I would vote to repeal the Affordable Care Act, also known as Obamacare | If it were up for a vote, I would vote to repeal the Affordable Care Act, also known as Obamacare                                                                        |
+| If it were up for a vote, I would vote to ban assault weapons                                     | If it were up for a vote, I would vote to ban assault weapons                                                                                                            |
+|                                                                                                   | If the 2016 presidential election were being held today and the candidates were Hillary Clinton (Democrat) and Donald Trump (Republican), I would vote for Donald Trump. |
+
+To estimate the proportion of voters who would vote for Donald Trump, we take the difference in means between the treatment and control group. In the control group, we get an estimate of the average number of responses to the control items about the minimum wage, Obamacare, and assault weapons. In the treatment group, respondents are asked for the count of a list including exactly these items as well as one more, on voting for Trump. Thus, the difference in means represents an estimate of the proportion who would vote for Trump. 
+
+In fact, the treatment group averaged 1.843 items while the control group averaged 1.548 items, for a difference-in-means estimate of support for Donald Trump of 29.6\% (note that this estimate is representative of US adults and not of US adults who would actually vote). The trouble with this estimate is that, while it's plausibly free from social desirability bias, it's also much higher variance. The 95\% confidence interval for the list experiment estimate is nearly 14 percentage points wide, whereas the the 95\% confidence interval for the (possibly biased!) direct question asked of the same sample is closer to 4 percentage points.
+
+### MIDA
+
+- **M**odel: Our model includes subjects' true support for Donald Trump and whether or not they are "shy".  These two variables combine to determine how subjects will respond when asked directly about Trump support.
+
+    The potential outcomes model combines three types of information to determine how subjects will respond to the list experiment: their responses to the three control items, their true support for Trump, and whether they are assigned to see the treatment or the control list. Notice that our definition of the potential outcomes embeds the "No Liars" and "No Design Effects" assumptions required for the list experiment design (see Blair and Imai 2012 for more on these assumptions).
+
+    We also have a global parameter that reflects our expectations about the proportion of Trump supporters who are shy. It's set at 6%, which is large enough to make a difference for polling, but not so large as to be implausible.
+
+- **I**nquiry: Our estimand is the proportion of voters who actually plan to vote for Trump. 
+
+- **D**ata strategy: First we sample 500 respondents from the U.S. population at random, then we randomly assign 250 of the 500 to treatment and the remainder to control. In the survey, we ask subjects both the direct question and the list experiment question.
+
+- **A**nswer strategy: We estimate the proportion of truthful Trump voters in two ways. First, we take the mean of answers to the direct question. Second, we take the difference in means in the responses to the list experiment question.
+
+### Declaration
+
+```{r}
+# Model -------------------------------------------------------------------
+
+# number of control items
+J <- 3 
+# probability of answering yes to each control item
+control_item_prob <- .25 
+
+population <- declare_population(
+  N = 5000,
+  
+  # true trump vote (unobservable)
+  truthful_trump_vote = draw_binary(.45, N),
+  
+  # count of `yes` responses to control items
+  control_item_count = draw_discrete(
+    control_item_prob, N, type = "binomial", k = J) 
+)
+
+# draw a single fixed population
+population <- population()
+
+potential_outcomes <- declare_potential_outcomes(
+  Y_Z_0 = control_item_count,
+  Y_Z_1 = control_item_count + truthful_trump_vote
+)
+
+# Inquiry -----------------------------------------------------------------
+estimand <- declare_estimand(
+  trump_vote = mean(truthful_trump_vote))
+
+# Data Strategy -----------------------------------------------------------
+sampling <- declare_sampling(n = 500)
+assignment <- declare_assignment(prob = .5)
+
+# Answer Strategy ---------------------------------------------------------
+estimator_list <- declare_estimator(
+  Y ~ Z, estimand = estimand, label = list)
+
+# Design ------------------------------------------------------------------
+design <- declare_design(
+  population, 
+  potential_outcomes, 
+  estimand,
+  sampling,
+  assignment, 
+  reveal_outcomes,
+  estimator_list
+  )
+
+diagnosands <- declare_diagnosands(
+  bias = mean(est - estimand),
+  mean_est = mean(est),
+  mean_ci_width = mean(ci_upper - ci_lower)
+)
+```
+
+```{r, echo=FALSE, eval= rerun_templates}
+diagnosis <- diagnose_design(design, sims = 1000, diagnosands = diagnosands)
+saveRDS(diagnosis, file = "../examples_data/list_experiments_part2.RData")
+saveRDS(design, file = "../examples_data/list_experiments_design.RData")
+```
+
+```{r, echo = FALSE}
+diagnosis <- readRDS("../examples_data/list_experiments_part2.RData")
+kable(get_diagnosands(diagnosis),  
+      col.names = c("Estimand", "Estimator", "Bias", "SE(bias)", "Mean Est.", "SE(mean est.)", "Mean CI Width", "SE(mean CI width)"),
+      digit = 3)
+```
+
+```{r, echo = FALSE}
+mean_estimand <- mean(get_simulations(diagnosis)$estimand)
+
+local_sims <- get_simulations(diagnosis) %>% 
+  mutate(sim_order = fct_reorder(factor(sim_ID), x = (ci_lower + ci_upper)/2),
+         covers = as.numeric(ci_lower <= estimand & estimand <= ci_upper))
+
+g1 <- 
+        local_sims %>%
+        ggplot(aes(est)) +
+        geom_histogram(bins = 50) +
+        geom_vline(data = local_sims, aes(xintercept = mean_estimand), 
+                   color = "red", linetype = "dashed")+
+        dd_theme +
+        theme(axis.text.y = element_blank(),
+              axis.title.y = element_blank(),
+              axis.ticks.y = element_blank(),
+              legend.position = "none", 
+              panel.grid.major = element_blank()) +
+        #coord_cartesian(xlim = c(0.25, 0.75)) +
+        xlab("Sample Mean Estimates")
+      
+      g2 <-
+        local_sims %>%
+        ggplot(aes(y = sim_order, x = est, color = covers)) +
+        geom_errorbarh(aes(xmin = ci_lower, xmax = ci_upper), height = 0) +
+        geom_vline(data = local_sims, aes(xintercept = mean_estimand), 
+                   color = "red", linetype = "dashed") +
+        dd_theme +
+        theme(axis.text.y = element_blank(),
+              axis.title.y = element_blank(),
+              axis.ticks.y = element_blank(),
+              legend.position = "none", 
+              panel.grid.major = element_blank()) +
+        #coord_cartesian(xlim = c(0.25, 0.75)) +
+        xlab("95% Confidence Intervals")
+
+if (knitr::opts_knit$get("rmarkdown.pandoc.to") != "html") {
+  grid.arrange(g1, g2, ncol = 2)
+}
+```
+
+<iframe src="https://acoppock.shinyapps.io/simple_rs/" style="border: none; width: 100%; height: 400px"></iframe>
+
+We see that the list experiment is unbiased, yet has wide confidence intervals. 
+
+## Further applications
+
+- *Vote choice and job approval:* @fry2017putin
+- *Prejudice:* 
+- *Vote buying in developing countries:* 
+- *Rates of risky behaviors like unprotected sex:* @Starosta_2014
+- *Committing a crime:* 
+
+## Exercises
+
+1. What happens when you increase the number of control items? Does this shrink or expand the width of the confidence intervals?
+
+2. Can you exactly identify the sensitive item response for any of the subjects?
+
+3. Does this change if you modify the design to have all of the control items equal to each other? 

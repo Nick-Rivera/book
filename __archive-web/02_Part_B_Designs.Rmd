@@ -1,0 +1,25 @@
+# (PART) Designs  {-} 
+
+# Descriptive (Observational)
+
+```{r, child = paste0(designs_path,'/SRS.Rmd')}
+```
+
+# Descriptive (Experimental) 
+
+```{r, child = paste0(designs_path,'/list_experiments.Rmd')}
+```
+
+
+# Causal (Observational)
+
+```{r, child = paste0(designs_path,'/regression_discontinuity.Rmd')}
+```
+
+# Causal (Experimental)
+
+```{r, child = paste0(designs_path,'/block_cluster.Rmd')}
+```
+
+
+

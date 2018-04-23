@@ -1,0 +1,186 @@
+```{r,echo=FALSE,eval=TRUE,comment=F,error=F,message=F,results='hide'}
+tempR <- tempfile(fileext = ".R")
+library(knitr)
+purl("../index.Rmd", output=tempR)
+source(tempR)
+unlink(tempR)
+```
+
+## Regression Discontinuity
+
+In non-experimental settings researchers often do not know how the treatment was assigned and must look for ways to make plausible as-if random assumptions that are sometimes hard to inspect. By contrast, in a regression discontinuity (RD) design we do in fact know how the treatment was assigned: everyone above some threshold and no one below it gets the treatment. Even though they are completely non-random, researchers can use allocation rules of this kind to infer the treatment effect for people located exactly at the threshold.  
+
+Thistlewhite and Campbell introduced the regression discontinuity design in the 1960s to study the impact of scholarships on academic success: the basic idea being that students with a test score *just* below that required for the scholarship were a good comparison to those who achieved *just* above it. Since its rediscovery by social scientists in the late 1990s, the RD design has been widely used to study diverse phenomena such as the effect of: prison on recidivism, China's one child policy on human capital, eligibility for World Bank loans on political liberalization and anti-discrimination laws on minority employment (see [Other Applications](rd_other_app) below for these and other examples). 
+
+Researchers have typically adopted one of two frameworks when employing RD designs to infer causal effects \@ref{sekhontitiunik2017}. The 'local randomization' approach assumes that in an area sufficiently close to the cutoff, it is as though the treatment is randomly assigned. Continuing our students example, say that the cutoff for the scholarship is a test score of 80. We might think that minor errors and happenstance -- how late one slept in, whether one studied exactly the test material when revising the night before, and so on -- determine whether students scores 79.5 as opposed to 80.2, for example. In this sense, there exists some unknown bandwidth around the cutoff where assignment to the scholarship treatment is random, and a simple difference-in-means might suffice to estimate the effect among such students. However, as we mentioned above, it is not necessary to assume the treatment is assigned as-if randomly in the RD design, indeed such assumptions are often more stringent than necessary \@ref{de2016misunderstandings}. The second RD framework is based on the 'continuity' approach, which allows for systematic differences on either side of the threshold, but assumes that the only thing that occurs at the threshold is a shift in the treatment status.
+
+the continuity assumption requires that the only change, which occurs at
+the point of discontinuity, is the shift in the treatment status. Under the continuity assumption,
+observations on either side of the discontinuity threshold can systematically differ from each other
+in many aspects, even by a large magnitude
+
+Debate about elections use, Move away from local randomization approach
+de2016misunderstandings think continuity is better, less worried about self-selection
+sekhontitiunik2017 don't mind it so much 
+
+imbens2008regression
+
+researchers can use a local linear
+regression combined with an optimal, data-driven bandwidth selection procedure developed in
+the literature (Imbens & Kalyanaraman 2012, Calonico et al. 2014). This method is known to
+have better theoretical properties at the discontinuity threshold (Fan & Gijbels 1996).
+
+the continuity-based framework, where the conditional expectations of the potential outcomes are assumed to be continuous functions of the score at the cutoff, and the local randomization framework, where the treatment assignment is assumed to be as good as randomized in a neighborhood around the cutoff.
+
+
+At its most basic, a regression discontinuity design has three essential features. We'll discuss each in the context of a famous study by researcher David Lee, who used a regression discontinuity design to study the effect of a democrat (republican) winning an election in the U.S. House of Representatives affects the probability of a democrat (republican) running in and winning the subsequent election.
+
+The first feature of a regression discontinuity is the treatment variable. In our example, the treatment is a democrat winning the election in time $T$. We are interested in the effect of this treatment on the probability that a democrat wins an election for the same seat in an election at time $T+1$. The second important feature is the running variable. We define the running variable in our example as the democrat's vote share minus .5, assuming there is only one democrat and one republican in the race and no others. Thus, the running variable is the democrat's winning margin, centered at 0. Finally, we have the threshold at which the treatment is assigned. In our example, the democrat wins whenever the democrat vote margin is greater than 0 and loses otherwise. 
+
+The basic intuition of the regression discontinuity design is that, if outcomes are a continuous function of the running variable, we can estimate it on either side of the threshold. Below the threshold, this gives us a model of the control outcomes at the sample level as a function of the running variable, and we have the same thing above the threshold for treatment outcomes. By taking the limit of these two outcomes as they go toward the threshold, we can in principle identify exactly the effect of the treatment *at the threshold*. 
+
+  - **M**odel: Our population consists of 1000 paired observations of congressional races at times $T$ and $T+1$. The races at time $T$ give us our running variable, which we construct by subtracting .5 winning cutoff from the democratic vote share in election $T$. Our treatment -- having a democrat win at time $T$ -- is a deterministic function of the running variable. Races at time $T+1$ are assigned to have a democratic incumbent elected in time $T$ with probability of 0 if the running variable is strictly negative, with probability 1 otherwise. Our outcome of interest is the probability with which a democrat wins in the race at time $T$.
+  
+    An important feature of our model is to imagine that there are unknown, continuous potential outcomes functions mapping group- or sample-level outcomes to the running variable. In our example, these functions tell us what the average probability of reelection in the sample is as a function of incumbent winning margin. Our potential outcomes declaration illustrates that we never in practice observe the probability of winning reelection for incumbents or challengers that are not reelected. This point is illustrated on the figure below, in which we plot the potential outcomes along the running variable. The solid parts of the line are the ones we can observe, while the dotted parts are unobservable. The points are observations in our sample. 
+
+- **I**nquiry: Because we never observe treated outcomes below the threshold of the running variable or control outcomes above it, we cannot estimate the average effect of the treatment in the sample. We can, however, take the difference in these two functions as they limit toward 0 as our estimand. This is equivalent to asking what is the (unobservable) sample-level difference in potential outcomes at the threshold: the black vertical line in the middle of the plot above. 
+
+- **D**ata strategy: We do not control sampling or assignment in this case, we simply use the data that is available. In principle there are other contexts where one may need to sample subjects into the study.
+
+- **A**nswer strategy: Our answer strategy involves regressing the outcome on a polynomial transformation of the running variable, interacted with treatment. Because the threshold is centered at 0, the value of the coefficient on the treatment is equal to the effect at the threshold (with interactions on the polynomials set to 0). 
+
+
+
+Mention here the different ways of thinking about it.
+One way is to think there is 'as-if' random, so that the POs are similar. Another is to think that they may be different, but we can extrapolate to the threshold.
+
+Mention also that there are better approaches 
+
+
+### Declaration
+
+
+```{r}
+# Model ------------------------------------------------------------------------
+cutoff <- .5
+control <- function(running) {
+  as.vector(poly(running, 4, raw = T) %*% c(1, -1, -.5, 1))}
+treatment <- function(running) {
+  as.vector(poly(running, 4, raw = T) %*% c(0, -2, .5, .8)) + .15}
+population <- declare_population(
+  N = 1000,
+  running = runif(N,0,1) - cutoff,
+  noise = rnorm(N,0,.1),
+  Z = 1 * (running > 0)
+)
+potential_outcomes <- declare_potential_outcomes(
+  formula = Y ~ Z * treatment(running) + (1 - Z) * control(running) + noise)
+# Inquiry ----------------------------------------------------------------------
+estimand <- declare_estimand(LATE = treatment(0) - control(0))
+# Answer Strategy --------------------------------------------------------------
+estimator <- declare_estimator(
+  formula = Y ~ poly(running, 4) * Z,
+  model = lm_robust,
+  estimand = estimand)
+# Design ----------------------------------------------------------------------
+rd_design <- declare_design(
+    population, potential_outcomes, estimand, reveal_outcomes, estimator)
+```
+
+
+```{r,echo = FALSE,eval = rerun_templates}
+rd_design <- declare_design(
+  population,
+  potential_outcomes,
+  estimand,
+  reveal_outcomes,
+  estimator
+)
+diagnosis <- diagnose_design(rd_design, bootstrap = FALSE, sims = 500)
+saveRDS(diagnosis, file = "../examples_data/rd_diagnosis.RDS")
+saveRDS(design, file = "../examples_data/rd_design.RDS")
+```
+
+
+```{r,echo = FALSE,eval = !rerun_templates}
+diagnosis <- readRDS(file = "../examples_data/rd_design.RDS")
+```
+
+### Takeaways 
+
+  - The first thing to note about the regression discontinuity design is how poorly the average treatment effect local to the threshold approximates the treatment effect across the whole sample. Consider, for example, the treatment effect among the treated (to the right of the threshold). On average, the effect is negative, whereas at the threshold it is positive. Thus, great care must be taken in interpreting the results of regression discontinuities as they apply to the rest of the sample. 
+  
+  - Second thing to note about this design is that we will always be ever so slightly biased in our attempts to estimate the effect, because it is never possible to observe units in treatment and control at exactly the same point of the running variable. This bias is mitigated when the derivatives of the potential outcomes functions are well approximated by the regression equation, and exacerbated by potential outcomes functions that work in very different ways at the threshold. 
+
+```{r,echo=FALSE}
+mock_data <- population() %>% potential_outcomes() %>% reveal_outcomes()
+running <- seq(-.5,.5,.005)
+treatment_frame <- data.frame(
+  running = running,
+  Y = treatment(running),
+  observed = ifelse(running > 0,"a","b"),
+  Z = 1
+  )
+control_frame <- data.frame(
+  running = running,
+  Y = control(running),
+  observed = ifelse(running <= 0,"a","b"),
+  Z = 0
+  )
+plot_frame <- rbind(treatment_frame,control_frame)
+
+ggplot(plot_frame,aes(x = running, y = Y, color = as.factor(Z))) + 
+  geom_line(aes(linetype = observed)) +
+  geom_point(data = mock_data, alpha = .2, size = .5) +
+  scale_linetype_discrete(name = "", labels = c("Observable","Unobservable")) +
+  scale_color_discrete(name = "", labels = c("Untreated","Treated")) +
+  geom_vline(xintercept = 0, size = .05) +
+  xlab("Running Variable") + 
+  geom_segment(aes(x = 0,xend = 0, y = control(0),yend = treatment(0)),color = "black")  +
+  dd_theme
+```
+
+
+```{r,echo = FALSE}
+knitr::kable((diagnosis$diagnosands[,c("bias","rmse","coverage","mean_estimate","sd_estimate","mean_estimand")]),digits = 3)
+```
+
+### Other Applications {#rd_other_app}
+
+Diverse settings 
+  - the effect of prison on recidivism Ojmarrh2017
+  - effect of one child policy on human capital in china qin2017
+  - the effect of anti-discrimination laws on employment hahn1999evaluating
+  - the effect of world bank loan eligibility on political liberalization carnegie2017international
+  - slaves GRD Tordesillas, Slavery and the Origins of Brazilian
+Inequality
+Other styles:
+  - Titiunik on GRD
+  - Fuzzy RD 
+  - RD with multiple dimensions 
+  - Local randomization assumption
+  - Comparative Regression Discontinuity design, tries to construct response across whole surface tangetal2017
+
+
+### Exercises
+
+  - Adjust the polynomial terms in the `treatment()` and `control()` functions and assess how this changes the bias of the design.
+  
+  - Compare the results that you get from an answer strategy assuming that the potential outcomes are a linear function of the running variable to those obtained when you assume that it is a polynomial function of order 8.
+  
+  - gelman2017high doesn't like this approach because of the weighting.  inspect the weights . One approach is to select a bandwidth, $h$, and run a linear regression. Try this approach 
+  
+  Compare the results obtained from using the `rdrobust` estimator in the `rdrobust`. Having read through the documentation from this package, in what ways might this represent a superior answer strategy to the one declared above?
+
+
+
+  - what if people could choose to be on one side vs. another 
+
+
+
+
+
+
+
+
+

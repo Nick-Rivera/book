@@ -1,0 +1,68 @@
+---
+title: "Declaring and Diagnosing Research Designs"
+author: "Graeme Blair, Jasper Cooper, Alexander Coppock, Macartan Humphreys"
+output:
+  bookdown::gitbook:
+    split_by: section
+    config:
+      download: ["pdf", "epub", "mobi"]
+      toc:
+        before: |
+          <li><a href="http://idss.DeclareDesign.org">Declaring and Diagnosing Research Designs</a></li>
+  bookdown::pdf_book:
+    template: template.tex
+    includes:
+      in_header: preamble.tex
+site: bookdown::bookdown_site
+documentclass: book
+fontsize: 10pt
+bibliography: [bib.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+github-repo: rstudio/rdb
+description: "Design design design."
+---
+
+
+```{r include=FALSE}
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown'
+), 'packages.bib')
+knitr::opts_chunk$set(echo = TRUE, message = FALSE)
+```
+
+
+```{r, echo=FALSE}
+library(DeclareDesign)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(gridExtra)
+
+set.seed(42)
+
+rerun_templates <- FALSE
+
+intro_path   <- "01_Part_1_sections"
+designs_path <- "02_Part_2_sections"
+outro_path   <- "03_Part_3_sections"
+
+dd_theme <-
+  theme_bw()  %+replace%
+  theme(
+    axis.ticks = element_blank(),
+    axis.line = element_blank(),
+    panel.border = element_blank(),
+    panel.grid.major = element_line(color = '#eeeeee'),
+    strip.background = element_blank(),
+    legend.position = "bottom"
+    )
+
+```
+
+# Welcome {-}
+
+In *Declaring and Diagnosing Research Designs*, we aim to present a comprehensive view of modern research design. 
+
+
+

@@ -1,0 +1,14 @@
+# (PART) Design Library  {-} 
+
+
+# Observational designs for descriptive inference
+
+```{r, child = paste0(designs_path,'/SRS.Rmd')}
+```
+
+# Observational designs for causal inference
+
+```{r, child = paste0(designs_path,'/regression_discontinuity.Rmd')}
+```
+
+

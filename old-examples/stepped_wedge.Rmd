@@ -1,0 +1,173 @@
+```{r,echo=FALSE,eval=FALSE}
+tempR <- tempfile(fileext = ".R")
+library(knitr)
+purl("../index.Rmd", output=tempR)
+source(tempR)
+unlink(tempR)
+```
+
+
+ 
+
+*Diagnosands*: Some stuff. 
+
+### MIDA 
+
+- **M**odel:
+- **I**nquiry:
+- **D**ata strategy:
+- **A**nswer strategy:
+
+### Declaration 
+
+```{r}
+
+stepped_wedge_template <- function(m_W1, m_W2, N_respondents = 90, sims = 100){
+  if(m_W1 + m_W2 > N_respondents) 
+    stop("You assigned more respondents to waves 1 and 2 than N_respondents.")
+  m_W3 <- N_respondents - m_W1 - m_W2
+# Model -------------------------------------------------------------------  
+  population <- 
+    declare_population(wave = level(N = 3,wave_id = 1:3),
+                       respondent = level(N = N_respondents, 
+                                          resp_id = 1:N_respondents,
+                                          wave_effect = rnorm(N,wave_id,1)))
+  potential_outcomes <- declare_potential_outcomes(Y ~ Z * .25 + wave_effect)
+# Inquiry -----------------------------------------------------------------  
+  estimand <- declare_estimand(ATE = mean(Y_Z_1 - Y_Z_0))
+# Data Strategy -----------------------------------------------------------  
+  wave_assignment <- 
+    declare_assignment(clust_var = resp_id,
+                       m_each = c(m_W1, m_W2, m_W3),
+                       condition_names = c("W1","W2","W3"),
+                       assignment_variable_name = "Z_wave")
+  get_treatment_status_and_prob <- function(data){
+    data$Z <- NA
+    data$Z[data$wave == 1 & data$Z_wave %in% c("W2","W3") ] <- 0
+    data$Z[data$wave == 1 & data$Z_wave %in% c("W1") ] <- 1
+    data$Z[data$wave == 2 & data$Z_wave %in% c("W3")] <- 0
+    data$Z[data$wave == 2 & data$Z_wave %in% c("W1","W2")] <- 1
+    data$Z[data$wave == 3] <- 1
+    
+    prob_0_W1 <- (N_respondents - m_W1) / N_respondents
+    prob_1_W1 <- m_W1 / N_respondents
+    prob_0_W2 <- prob_0_W1 * ((N_respondents - m_W1 - m_W2) / (N_respondents - m_W1))
+    prob_1_W2 <- prob_0_W1 * (m_W2 / (N_respondents - m_W1)) + prob_1_W1
+    prob_0_W3 <- prob_0_W2 * ((N_respondents - m_W1 - m_W2 - m_W3) / (N_respondents - m_W1))
+    prob_1_W3 <- prob_0_W2 * (m_W3 / (N_respondents - m_W1 - m_W2)) + prob_1_W2
+    
+    data$Z_cond_prob <- NA
+    data$Z_cond_prob[data$wave == 1 & data$Z == 0] <- prob_0_W1
+    data$Z_cond_prob[data$wave == 1 & data$Z == 1] <- prob_1_W1
+    data$Z_cond_prob[data$wave == 2 & data$Z == 0] <- prob_0_W2
+    data$Z_cond_prob[data$wave == 2 & data$Z == 1] <- prob_1_W2
+    data$Z_cond_prob[data$wave == 3 & data$Z == 0] <- prob_0_W3
+    data$Z_cond_prob[data$wave == 3 & data$Z == 1] <- prob_1_W3
+    
+    return(data)
+  }
+# Answer Strategy ---------------------------------------------------------  
+  estimator <- declare_estimator(formula = Y ~ Z, 
+                                 model = lm, 
+                                 weights = 1 / Z_cond_prob,
+                                 subset = wave != 3,
+                                 estimand = estimand)
+# Design declaration ------------------------------------------------------
+  stepped_design <- declare_design(
+    population, 
+    potential_outcomes,
+    estimand,
+    wave_assignment,
+    get_treatment_status_and_prob,
+    reveal_outcomes,
+    estimator)
+  diagnosis <- diagnose_design(stepped_design,sims = sims,bootstrap = FALSE)
+  diagnosis_frame <- diagnosis$diagnosands
+  return(diagnosis_frame)
+}
+```
+
+
+```{r, eval = FALSE}
+m_permutations <- expand.grid(m_W1 = seq(2,90,8),m_W2 = seq(2,90,8))
+m_permutations <- m_permutations[rowSums(m_permutations) <= 90, ]
+
+N_respondents <- 90
+diagnoses <- plyr::mdply(.data = m_permutations, .fun = stepped_wedge_template, sims = 2)
+```
+
+
+```{r, echo = FALSE, eval = rerun_templates}
+m_permutations <- expand.grid(m_W1 = seq(2,90,8),m_W2 = seq(2,90,8))
+m_permutations <- m_permutations[rowSums(m_permutations) <= 90, ]
+
+N_respondents <- 90
+diagnoses <- plyr::mdply(.data = m_permutations, .fun = stepped_wedge_template, sims = 2)
+saveRDS(diagnoses, file = "../examples_data/04_stepped_wedge.RDS")
+```
+
+
+```{r, echo = FALSE, eval = !rerun_templates}
+diagnoses <- readRDS("../examples_data/04_stepped_wedge.RDS")
+```
+
+
+### Takeaways
+
+```{r, echo=FALSE}
+ggplot(diagnoses, aes(x = m_W1, y = m_W2)) +
+    theme_bw() +
+    xlab('Number of subjects assigned in Wave 1') +
+    ylab('Number of subjects assigned in Wave 2') +
+  geom_tile(aes(fill = power), color='white') +
+  scale_fill_gradient(low = 'white', high = 'darkblue', space = 'Lab') +
+  dd_theme
+```
+
+
+
+
+### Exercises 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

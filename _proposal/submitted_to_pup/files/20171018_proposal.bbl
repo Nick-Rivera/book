@@ -1,0 +1,50 @@
+\begin{thebibliography}{xx}
+
+\harvarditem{Brady \harvardand\ Collier}{2010}{brady2010rethinking}
+Brady, Henry~E. \harvardand\ David Collier. 2010.
+\newblock {\em Rethinking Social Inquiry: Diverse Tools, Shared Standards}.
+\newblock Lanham, Maryland:  Rowman \& Littlefield Publishers.
+
+\harvarditem{Dunning}{2012}{dunning2012natural}
+Dunning, Thad. 2012.
+\newblock {\em Natural Experiments in the Social Sciences: a Design-based
+  Approach}.
+\newblock Cambridge:  Cambridge University Press.
+
+\harvarditem{Gelman \harvardand\ Hill}{2006}{gelman2006data}
+Gelman, Andrew \harvardand\ Jennifer Hill. 2006.
+\newblock {\em Data Analysis Using Regression and Multilevel/Hierarchical
+  Models}.
+\newblock Cambridge:  Cambridge University Press.
+
+\harvarditem{Gerber \harvardand\ Green}{2012}{Gerber2012}
+Gerber, Alan~S. \harvardand\ Donald~P. Green. 2012.
+\newblock {\em {Field Experiments: Design, Analysis, and Interpretation}}.
+\newblock New York:  W.W. Norton.
+
+\harvarditem{Gerring}{2011}{gerring2011social}
+Gerring, John. 2011.
+\newblock {\em Social Science Methodology: A Unified Framework}.
+\newblock Cambridge:  Cambridge University Press.
+
+\harvarditem{Glennerster \harvardand\
+  Takavarasha}{2013}{glennerster2013running}
+Glennerster, Rachel \harvardand\ Kudzai Takavarasha. 2013.
+\newblock {\em Running Randomized Evaluations: A Practical Guide}.
+\newblock Princeton:  Princeton University Press.
+
+\harvarditem[James, Witten \harvardand\ Hastie]{James, Witten \harvardand\
+  Hastie}{2014}{james2014introduction}
+James, Gareth, Daniela Witten \harvardand\ Trevor Hastie. 2014.
+\newblock {\em {An Introduction to Statistical Learning: With Applications in
+  R.}}
+\newblock New York:  Springer.
+
+\harvarditem[King, Keohane \harvardand\ Verba]{King, Keohane \harvardand\
+  Verba}{1994}{king1994designing}
+King, Gary, Robert~O. Keohane \harvardand\ Sidney Verba. 1994.
+\newblock {\em Designing Social Inquiry: Scientific Inference in Qualitative
+  Research}.
+\newblock Princeton:  Princeton University Press.
+
+\end{thebibliography}

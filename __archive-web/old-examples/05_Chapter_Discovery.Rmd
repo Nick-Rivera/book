@@ -1,0 +1,9 @@
+
+# Discovery
+
+Quick blurb on discovery designs.
+
+## How Often Do You Identify the Right Model for Y?
+
+```{r, child = paste0(designs_path,'/model_for_outcomes.Rmd')}
+```

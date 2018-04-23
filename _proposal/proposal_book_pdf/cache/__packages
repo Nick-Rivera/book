@@ -1,0 +1,13 @@
+base
+knitr
+DeclareDesign
+fabricatr
+estimatr
+randomizr
+ggplot2
+dplyr
+tidyr
+gridExtra
+forcats
+xtable
+bindrcpp

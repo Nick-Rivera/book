@@ -1,0 +1,152 @@
+```{r,echo=FALSE,eval=FALSE}
+tempR <- tempfile(fileext = ".R")
+library(knitr)
+purl("../index.Rmd", output=tempR)
+source(tempR)
+unlink(tempR)
+```
+
+
+
+One of the most pressing descriptive research questions in social science is the extent of discrimination against marginalized groups. We want to know, on average, how much employers, bureaucrats, or other officials favor one group over another. However, measuring discrimination is hard; we don't have a magic magnifying glass we can hold up to H.R. representatives that will measure the amount of discrimination in their heart. Researchers instead turn to \textbf{audit studies}, which measure the level of discrimination by answering a related (but different!) causal question: what is the effect of \textbf{signaling} membership in one group over another on the \textbf{actions} taken by subjects such as calls returned, emails sent in response, or offers of information or assistance. 
+
+White, Nathan, and Faller (2015) applied the correspondence experiment to the study of discrimination by election officials. The authors sent emails from putatively White or Latino voters to election officials, seeking information about what is required in order to vote. The authors collected two kinds of outcomes: \texttt{whether} the officials responded and \texttt{how} they responded. 
+
+This design faces an interesting problem. Studying the effect of the Latino name versus the White name on the response rate is straightforward: we simply compare the average response rates across the treatment groups. But studying the effect on the quality of the response (its informativeness or friendliness) is harder because of the danger of post-treatment bias.
+
+We'll show how naive estimates of the effect on tone are biased, but that we can slightly change the inquiry and answer strategy to get around this bias.
+
+### MIDA
+
+- **M**odel: The variables in this design will be:
+
+    - a binary treatment variable (Latino name = 1, White name = 0)
+    - a binary response variable (Subject responded = 1, Subject did not respond = 0)
+    - a tone variable that is binary if the subject responds (Tone is friendly = 1, Tone is unfriendly = 0) but that is undefined (Tone is undefined = NA) if the subject does not respond.
+    - an alternative tone varible that is binary (1 if subject responds with friendly tone, and 0 otherwise)
+    - A latent "discrimination" variable that is normally distributed that describes bureaucrats' preference for Whites over Latinos.
+
+- **I**nquiry: We'll consider three inquiries:
+
+    - The average difference in response rates to emails from from senders with typically White or Latino names.
+    - The average difference in the friendliness of response among emails that would recieve a response \textbf{regardless of whether they were sent from a White or Latino name}.
+    - The average difference in friendliness of response among all emails, where responses never sent are considered "unfriendly."
+
+    In this setting, a subject might be one of the four types in the table below. $R_i(Z)$ is the response potential outcome depending on whether subject $i$ is assigned to a non-Latino name ($Z = 0$) or a Latino name ($Z = 1$). A types always respond, D types never respond, and B and C types respond if and only if they are in one condition or the other. The average effect of treatment on whether subjects respond can be seen as the proportion of B types minus the proportion of C types. 
+
+    $Y_i(Z)$ is the tone potential outcome. The table shows that the effect of treatment on this outcome is only defined for A types and is \textbf{undefined} if a subject does not respond in one or both of the treatment conditions. Our second estimand is therefore $\E[Y_i(1) - Y_i(0) | R_i(0) = R_i(1) = 1]$. The trouble is, the design will not reveal enough information to estimate this estimand because we don't know who the A types are. In the Non-Latino name group, responders are As and Cs, whereas in the Latino name group, responders are As and Bs. 
+
+    The alternative definition of tone, $Y_i^*(Z)$, is equal to $Y_i(Z)$ if $R_i(Z) = 1$ and 0 otherwise. Crucially, this means that emails never sent are ``not friendly.'' Our design will reveal enough information to provide a good answer to this inquiry because $\E[Y_i^*(1) - Y_i^*(0)]$ is defined for all types.
+
+    \begin{table}[!htbp]
+\centering
+\caption{Types of Subjects}
+    \begin{tabular}{lllllll}
+    \toprule
+    Type & $R_i(0)$ & $R_i(1)$ & $Y_i(0)$ & $Y_i(1)$ & $Y_i^*(0)$ & $Y_i^*(1)$ \\ \midrule
+    A    & 1       & 1       & $Y_i(0)$ & $Y_i(1)$ & $Y_i(0)$ & $Y_i(1)$    \\
+    B    & 0       & 1       & NA      & $Y_i(1)$  & 0      & $Y_i(1)$   \\
+    C    & 1       & 0       & $Y_i(0)$ & NA       & $Y_i(0)$ & 0        \\
+    D    & 0       & 0       & NA      & NA        & 0      & 0         \\ \bottomrule
+    \end{tabular}
+\end{table}
+
+- **D**ata strategy: The data strategy for audit experiments requires obtaining the contact information for a sample of officials. These are often culled from websites or existing email lists. Subjects are then randomized into treatment and control groups, often using block random assignment by geographic area or employment sector. Audit experiments lend themselves to study a large number of groups against which subjects might discriminate -- they share that feature with the conjoint design discussed in XXXX. For this example, however, we'll just consider the two-arm variant using complete random assignment.
+
+- **A**nswer strategy: We'll consider three answer strategies, one for each of the inquiries. In all cases, we'll use difference-in-means with robust standard errors with different outcome variables.  
+
+### Declaration
+
+```{r}
+# Model -------------------------------------------------------------------
+population <-
+  declare_population(
+    N = 500,
+    discrimination = rnorm(N),
+    type = draw_discrete(
+      discrimination,
+      type = "ordered",
+      breaks = c(-Inf, 0, 0.5, 2, Inf),
+      break_labels = c("A", "B", "C", "D")
+    )
+  )
+potential_outcomes <-
+  declare_potential_outcomes(R_Z_0 = as.numeric(type %in% c("A", "C")),
+                             R_Z_1 = as.numeric(type %in% c("A", "B")),
+                             Y_Z_0 = ifelse(type %in% c("A", "C"), draw_binary(discrimination, link = "probit"), NA),
+                             Y_Z_1 = ifelse(type %in% c("A", "B"), draw_binary(discrimination + 0.25, link = "probit"), NA),
+                             Ystar_Z_0 = ifelse(type %in% c("A", "C"), Y_Z_0, 0),
+                             Ystar_Z_1 = ifelse(type %in% c("A", "B"), Y_Z_1, 0)
+  )
+
+# Inquiry -----------------------------------------------------------------
+estimand_1 <- declare_estimand(mean(R_Z_1 - R_Z_0), label = "ATE on Response")
+estimand_2 <- declare_estimand(mean(Y_Z_1[type == "A"] - Y_Z_0[type == "A"]), label = "ATE on Tone")
+estimand_3 <- declare_estimand(mean(Ystar_Z_1 - Ystar_Z_0), label = "ATE on Tone (Alternative)")
+
+# Data Strategy -----------------------------------------------------------
+assignment <- declare_assignment()
+
+# Answer Strategy ---------------------------------------------------------
+estimator_1 <- declare_estimator(R ~ Z, model = difference_in_means, coefficient_name = "Z", estimand = estimand_1, label = "ATE on Response")
+estimator_2 <- declare_estimator(Y ~ Z, model = difference_in_means, estimand = estimand_2, label = "ATE on Tone")
+estimator_3 <- declare_estimator(Ystar ~ Z, model = difference_in_means, estimand = estimand_3, label = "ATE on Tone (Alternative)")
+
+# Design ------------------------------------------------------------------
+design <- declare_design(
+  population,
+  potential_outcomes,
+  assignment,
+  estimand_1, estimand_2, estimand_3,
+  reveal_outcomes(outcome_variable_names = c("R", "Y", "Ystar")),
+  estimator_1, estimator_2, estimator_3
+)
+```
+
+```{r,eval = FALSE}
+diagnosis <- diagnose_design(design, sims = 1000, bootstrap = FALSE)
+```
+
+```{r, echo=FALSE, eval= rerun_templates}
+design <- declare_design(
+  population,
+  potential_outcomes,
+  assignment,
+  estimand_1,
+  estimand_2,
+  estimand_3,
+  reveal_outcomes(outcome_variable_names = c("R", "Y", "Ystar")),
+  estimator_1,
+  estimator_2,
+  estimator_3
+  )
+
+diagnosis <- diagnose_design(design, sims = 1000, bootstrap = FALSE)
+saveRDS(diagnosis, file = "../examples_data/06_audit_experiments.RDS")
+```
+
+```{r, echo=FALSE, eval = !rerun_templates}
+diagnosis <- readRDS("../examples_data/06_audit_experiments.RDS")
+```
+
+### Takeaways
+
+```{r, echo=FALSE, caption = "Sampling Distribution of Three Estimators: Correspondence Experiments"}
+diagnosis$simulations %>%
+  ggplot(aes(est)) + geom_histogram(bins = 30) +
+  facet_wrap(~estimand_label) +
+  geom_vline(data = diagnosis$diagnosands, aes(xintercept = mean_estimand), color = "red") +
+  theme(axis.title = element_blank()) +
+  dd_theme +
+  theme(axis.title = element_blank())
+```
+
+Many people who conduct audit experiments want to go beyond merely analyzing the effect of race on response rates. Since the quality of the reply contains information, it's tempting to use some summary of the reply (for example, the friendliness of the reply) as an alternative dependent variable. Unfortunately, naive analyses of tone, length, or informativeness run a risk of post-treatment bias. We've seen, however, that running the analysis on an alternative definition of tone (crucially, an alternative that does not condition on a response) is free from this bias.
+
+### Exercises
+
+1. Using the `population` and `potential_outcomes` declaration above, calculate the value of all three inquiries separately for A, B, C, and D types. Are the effects on `Ystar` different for the different types? Explain why or why not?
+
+2. Imagine that discrimination has no effect on whether a subject responds to an email, but it does affect the friendliness of an email. Which, if any, of the estimators are biased?
+
+3. Experiments on donations often seek to measure the effect of an intervention on whether a donation is made at all and on the size of a donation. Declare and diagnose a research design for such an experiment, being careful not to induce post-treatment bias.

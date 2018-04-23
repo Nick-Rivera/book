@@ -1,0 +1,10 @@
+# (PART) Principles of Research Designs {-} 
+
+# Inquiry principles
+
+```{r, child = paste0(principles_path,'/inquiries_without_answers.Rmd')}
+```
+
+
+
+

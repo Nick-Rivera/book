@@ -1,0 +1,47 @@
+\begin{thebibliography}{xx}
+
+\harvarditem{Carnegie \harvardand\ Samii}{2017}{carnegie2017international}
+Carnegie, Allison \harvardand\ Cyrus Samii. 2017.
+\newblock ``International Institutions and Political Liberalization: Evidence
+  from the World Bank Loans Program.'' {\em British Journal of Political
+  Science} pp.~1--23.
+
+\harvarditem{Gelman \harvardand\ Imbens}{2017}{gelman2017high}
+Gelman, Andrew \harvardand\ Guido Imbens. 2017.
+\newblock ``Why high-order polynomials should not be used in regression
+  discontinuity designs.'' {\em Journal of Business \& Economic Statistics} .
+
+\harvarditem[Hahn, Todd \harvardand\ Van~der Klaauw]{Hahn, Todd \harvardand\
+  Van~der Klaauw}{1999}{hahn1999evaluating}
+Hahn, Jinyong, Petra Todd \harvardand\ Wilbert Van~der Klaauw. 1999.
+\newblock ``Evaluating the effect of an antidiscrimination law using a
+  regression-discontinuity design.'' NBER Working Paper 7131.
+
+\harvarditem{Keele \harvardand\ Titiunik}{2016}{keele2016natural}
+Keele, Luke \harvardand\ Roc{\'\i}o Titiunik. 2016.
+\newblock ``Natural experiments based on geography.'' {\em Political Science
+  Research and Methods} 4(1):65--95.
+
+\harvarditem[Mitchell et~al.]{Mitchell, Cochran, Mears \harvardand\
+  Bales}{2017}{Ojmarrh2017}
+Mitchell, Ojmarrh, Joshua~C. Cochran, Daniel~P. Mears \harvardand\ William~D.
+  Bales. 2017.
+\newblock ``Examining Prison Effects on Recidivism: A Regression Discontinuity
+  Approach.'' {\em Justice Quarterly} 34(4):571--596.
+
+\harvarditem[Qin, Zhuang \harvardand\ Yang]{Qin, Zhuang \harvardand\
+  Yang}{2017}{qin2017}
+Qin, Xuezheng, Castiel~Chen Zhuang \harvardand\ Rudai Yang. 2017.
+\newblock ``Does the one-child policy improve children's human capital in urban
+  China? A regression discontinuity design.'' {\em Journal of Comparative
+  Economics} 45(2):287 -- 303.
+
+\harvarditem{Sekhon \harvardand\ Titiunik}{2017}{sekhontitiunik2017}
+Sekhon, Jasjeet~S. \harvardand\ Roc{\'\i}o Titiunik. 2017.
+\newblock On Interpreting the Regression Discontinuity Design as a Local
+  Experiment.  In {\em Regression Discontinuity Designs}, ed. Thomas~B. Fomby,
+  R.~Carter Hill, Ivan Jeliazkov, Juan~Carlos Escanciano \harvardand\ Eric
+  Hillebrand.
+\newblock Emerald chapter~1, pp.~1--28.
+
+\end{thebibliography}

@@ -1,0 +1,111 @@
+```{r,echo=FALSE,eval=FALSE}
+tempR <- tempfile(fileext = ".R")
+library(knitr)
+purl("../index.Rmd", output=tempR)
+source(tempR)
+unlink(tempR)
+```
+
+
+
+We are often interested not in what the effect of $Z$ is on $Y$ but in *what affects $Y$*. Multiple regression is often the tool used to measure the partial effects of a set of variables to determine which of the variables affect $Y$, conditional on the others. Is this a good strategy? One way to ask pose this question is to ask, how often do we identify exactly the right set of variables that affect $Y$ (and none that do not)? We may also be interested in how often we *falsely* decide that a variable has a relationship with $Y$ when in fact there is no relationship. In general, we do not know the true model, so we cannot assess these questions for an applied research question; instead, we can assess *analysis strategies* to see, if we pose a true model, how good the analysis strategy is in terms of these two questions.
+
+### MIDA
+
+Model: We posit a true model for $Y$ with three correlated variables: age, income, and education. Our model for $Y$ is an additive one and includes a (causal) effect from income and education but no effect of age. We also add a noise component to $Y$. Yet, given the correlation between age and the other two variables, we may sometimes falsely conclude that age has an effect. 
+
+Inquiry: Two inquiries are of interest: what are the variables that exert an effect on $Y$ (in this case, income and education)? And does age exert an effect on $Y$ (in this case, no)?
+
+Data strategy: We collect data on the outcome and three variables that may predict it. 
+
+Answer strategy: We model $Y$ using a simple, additive OLS model with three covariates: age, income, and education. From this model, we obtain two answers. Our answer to the first inquiry is the set of covariates that have a statistically-significant effect ($p$ < .05). To the second query, our answer is whether age is statistically-significant ($p$ < .05). 
+
+### Declaration
+
+```{r}
+
+# Model -------------------------------------------------------------------
+
+population <- declare_population(
+  N = 1000,
+  age = rnorm(N),
+  income = rnorm(N) + 0.1 * age,
+  education = income + 0.25 * rnorm(N),
+  noise = rnorm(N),
+  Y = .7 * income + .5 * education + noise
+)
+
+# Inquiry -----------------------------------------------------------------
+estimand_non_zero_effects <- declare_estimand(non_zero_effects = "income, education")
+estimand_age_effect <- declare_estimand(age_effect = "null")
+
+# Data Strategy -----------------------------------------------------------
+# Though in this design there is no sampling, assignment, or other defined 
+#   data strategy, of course the researcher had to collect data in order to 
+#   run a regression here. This is the (implicit) data strategy.
+
+# Answer Strategy ---------------------------------------------------------
+estimator_right_model <- declare_estimator(
+  estimator_function = function(data){
+    model_fit <- lm_robust(Y ~ income + education + age, data = data)
+    estimates <- tidy(model_fit)
+    answer <- paste0(estimates$coefficient_name[which(estimates$p <= .05)], collapse = ", ")
+    return(data.frame(answer = answer))
+  },
+  estimand = estimand_non_zero_effects,
+  label = right_model
+)
+
+estimator_age_effect <- declare_estimator(
+  estimator_function = function(data){
+    model_fit <- lm_robust(Y ~ income + education + age, data = data)
+    estimates <- tidy(model_fit)
+    answer <- ifelse(estimates$p[estimates$coefficient_name == "age"] > .05,
+                     "null", "significant")
+    return(data.frame(answer = answer))
+  },
+  estimand = estimand_age_effect,
+  label = age_null_effect
+)
+
+# Design -------------------------------------------------------------------
+design <- declare_design(
+  population,
+  estimand_non_zero_effects, estimand_age_effect,
+  estimator_right_model, estimator_age_effect
+)
+```
+
+Now we can diagnose the design with the following diagnosand:
+
+```{r, eval = FALSE}
+diagnosis <- diagnose_design(
+  design, diagnosands = declare_diagnosands(proportion_correct = mean(answer == estimand)),
+  sims = 1000, bootstrap = FALSE)
+```
+
+```{r, echo = FALSE}
+diagnosis <- readRDS("../examples_data/07_model_for_outcomes.RDS")
+```
+
+### Takeaways
+
+```{r, echo=FALSE, caption = "xxxx"}
+diagnosand_plot <- get_diagnosands(diagnosis) %>%
+  filter(rho == .5) %>% 
+  ggplot(aes(y = proportion_correct, x = N, 
+             group = estimator_label, linetype = estimator_label)) + 
+  geom_line() + 
+  facet_wrap(~ effect_size)
+
+if (knitr::opts_knit$get("rmarkdown.pandoc.to") != "html") {
+  diagnosand_plot
+}
+```
+
+<iframe src="https://graemeblair.shinyapps.io/sensitive-questions/" style="border: none; width: 100%; height: 400px"></iframe>
+
+In the plot, we observe that even at small sample sizes the design is a good one for correctly identifying that there is a null effect from age. However, when the effect size is small, the design infrequently correctly identifies the right model for $Y$. Even with large effect sizes , the design will often fail to identify the right variables at low sample sizes. Both findings stem from the fact that our decision rule was to use a statistical significance filter based on the $p$-value. When sample sizes are small, we are likely to make Type II errors (fail to reject the null of no effect when we should reject it), because of low statistical power. The same intuition holds for small effect sizes, for which we would need larger sample sizes to increase the power. Even at sample sizes like 750, relatively large for many types of large-N quantitative analyses in the social sciences, the OLS design is not a good one for identifying what determines $Y$. We will often miss at least one variable with a true effect or falsely think a variable with a null effect has an effect.
+
+### Exercises
+

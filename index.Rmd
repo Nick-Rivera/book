@@ -1,0 +1,93 @@
+---
+title: "Declaring and Diagnosing Research Designs"
+author: "Graeme Blair, Jasper Cooper, Alexander Coppock, Macartan Humphreys"
+output:
+  bookdown::gitbook:
+    config:
+      download: []
+      toc:
+        after: |
+          <li><a href="http://DeclareDesign.org" target="blank">DeclareDesign</a></li>
+        before: |
+          <li><a href="./">Declaring and Diagnosing Research Designs</a></li>
+        collapse: section
+      sharing: 
+        all: false
+        github: false
+        facebook: false
+        twitter: false
+        google: false
+        weibo: false
+        instapper: false
+    css: style.css
+    split_by: section
+bibliography: [bib.bib, packages.bib]
+description: "Design design design."
+documentclass: book
+fontfamily: mathpazo
+fontsize: 11pt
+github-repo: rstudio/rdb
+link-citations: yes
+site: bookdown::bookdown_site
+biblio-style: apalike
+---
+
+
+```{r include=FALSE}
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown'
+), 'packages.bib')
+knitr::opts_chunk$set(echo = TRUE, message = FALSE)
+```
+
+
+```{r, echo=FALSE, warning=FALSE}
+library(DeclareDesign)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(gridExtra)
+library(forcats)
+library(knitr)
+
+set.seed(42)
+
+rerun_templates <- FALSE
+sims <- 10000
+
+intro_path   <- "01_Part_A_MIDA"
+designs_path <- "02_Part_B_Designs"
+outro_path   <- "03_Part_C_Principles"
+principles_path <- "03_Part_C_Principles"
+
+library(ggplot2)
+
+pro_con_colors <- c("#C67800", "#205C8A")
+
+#colorfunction <- colorRampPalette(pro_con_colors)
+#pred_cols <- colorfunction(4)
+
+dd_theme <-
+  function() {
+    theme_bw() +
+      theme(
+        axis.ticks = element_blank(),
+        axis.line = element_blank(),
+        panel.border = element_blank(),
+        panel.grid.major = element_line(color = '#eeeeee'),
+        strip.background = element_blank(),
+        legend.position = "bottom",
+        text = element_text(family = "Palatino"))
+  }
+
+#p <- ggplot(mtcars, aes(wt, mpg))
+#p + geom_point() + dd_theme()
+
+```
+
+# Welcome {-}
+
+In *Declaring and Diagnosing Research Designs*, we aim to present a comprehensive view of research designs in the social sciences.
+
+
+

@@ -1,0 +1,82 @@
+
+```{r,echo=FALSE,eval=FALSE,results='hide'}
+tempR <- tempfile(fileext = ".R")
+library(knitr)
+purl("../index.Rmd", output=tempR)
+source(tempR)
+unlink(tempR)
+```
+
+## Blocked and Clustered 
+
+Blocking and clustering are two fundamentally distinct ways of grouping units in a random allocation procedure. A cluster is a group of units who cannot be assigned to a given treatment condition independently of one another: if I am in your cluster we are either both treated or both in control. A block is a group of units among which treatment is assigned using complete randomization (see example X for a definition of complete random assignment): if I am in a different block to you, my treatment assignment will be completely independent of yours.
+
+Ryan Enos used a block and cluster randomized design to study how contact with Hispanic foreigners affects attitudes towards immigration. He selected nine commuter rail stations and within each chose two trains to include in his experiment. In each rail station, he assigned one of the two trains to treatment: for up to ten days, Spanish-speaking confederates waited on the platform of the train assigned to treatment, but not the one assigned to control. He then measured the attitudes of commuters among the 18 trains assigned to treatment and control via internet surveys, and found that the social contact with the Hispanic confederates decreased support for immigration from Mexico.   
+
+In this setup, the units are the commuters. The clusters are the trains: if Joe was on a train at the same time as Mary, there is no way to assign Joe without also assigning Mary to treatment or control. The stations are the blocks: one train within each station is assigned to treatment. If Joe and Mary are in the same station, and Joe's train is assigned to treatment, then Mary's must be assigned to control. By contrast, if Joe and Mary are at different stations, there is no way to know Mary's treatment status from the fact that Joe's train is assigned to treatment: these randomizations are conducted independently from one another within the stations. 
+
+In general, blocking improves the precision of estimates while clustering reduces it. Imagine that Ryan Enos were to have clustered at the train station level, for example, rather than blocking. In this case, he might have assigned 4 stations to treatment and 5 to control, resulting in 8 treatment trains and 10 control trains. Notice that anything that makes one station from another -- such as being located in an area where people have more liberal attitudes on immigration -- potentially varies with the treatment now. If we see a big difference between treatment and control this might be due to the differences between stations, rather than to the treatment effect.   
+
+### Declaration
+
+- **M**odel: Our model features 9 blocks, each with a matched pair of clusters, within each of which we interview 10 respondents ($N = 190$). The effects of the treatment are heterogenous by both cluster and block. 
+
+- **I**nquiry: We are interested in the average treatment effect among the sample
+
+- **D**ata strategy: Our data strategy involves assigning one unit within each of the 9 blocks of paired clusters.
+
+- **A**nswer strategy: Our estimation strategy consists of regressing the outcome on the treatment indicator, while clustering standard errors at the level of treatment assignment (the cluster).
+
+```{r}
+# Model ------------------------------------------------------------------------
+population <- declare_population(
+  block = level(N = 9,
+                clusters_per_block = 2,
+                block_effect = rnorm(N)),
+  cluster = level(N = clusters_per_block, 
+                  individuals_per_cluster = 10,
+                  cluster_effect = rnorm(N)),
+  individual = level(N = individuals_per_cluster,
+                     noise = rnorm(N)))
+potential_outcomes <- declare_potential_outcomes(
+  formula = Y ~ Z + Z * (block_effect + cluster_effect) + noise)
+# Inquiry ----------------------------------------------------------------------
+estimand <- declare_estimand(ATE = mean(Y_Z_1 - Y_Z_0))
+# Data Strategy ----------------------------------------------------------------
+assignment <- declare_assignment(block_var = block,
+                                 clust_var = cluster, 
+                                 m = 1)
+# Answer Strategy --------------------------------------------------------------
+estimator <- declare_estimator(formula = Y ~ Z,
+                               model = horvitz_thompson,
+                               cluster_variable_name = as.integer(cluster),
+                               condition_pr_variable_name = Z_cond_prob,
+                               estimand = estimand)
+# Design ----------------------------------------------------------------------
+block_cluster_design <- declare_design(
+  population, potential_outcomes, estimand, assignment, reveal_outcomes,
+  estimator)
+```
+
+```{r, eval = FALSE}
+diagnosis <-
+  diagnose_design(block_cluster_design = block_cluster_design,
+                  sims = sims, bootstrap = FALSE)
+```
+
+```{r, eval = rerun_templates,echo = FALSE}
+diagnosis <-
+  diagnose_design(block_cluster_design = block_cluster_design,
+                  sims = sims, bootstrap = FALSE)
+```
+
+### Takeaways
+
+  - 
+
+### Other Applications
+
+
+
+
+### Exercises
