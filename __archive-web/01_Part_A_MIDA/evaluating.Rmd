@@ -1,8 +1,0 @@
-- Pre-analysis plan
-- Replicating 
-  - Homeground dominance
-- Critiquing
-- Results blind peer-review
-  - Registered reports better
-- Transparency
-  - Great that people publish data, but if I don't have the data, I may know how *they* analyze the data, but I don't know how *to* analyze the data

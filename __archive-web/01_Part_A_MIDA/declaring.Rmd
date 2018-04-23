@@ -1,8 +1,0 @@
-
-- Formal process
-  - Formality doesn't have to mean math + code, it could also be done in words
-- Other ways exist to simulate
-  - Base R
-  - Stata (using Randomizr etc.)
-  - Python
-
