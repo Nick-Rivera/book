@@ -11,7 +11,7 @@ unlink(tempR)
 library(DeclareDesign)
 library(knitr)
 library(DesignLibrary)
-sims = 2000
+sims = 500
 ```
 
 
@@ -42,10 +42,10 @@ Here are the key parts to the design:
 
 | Type | $R_i(0)$ | $R_i(1)$ | $E(Y_i(0))$  | $E(Y_i(1))$ |
 | ---- | -------- | -------- | ------------ | -------- |
-| A    | 1        | 0        | $-1$         | NA       |
-| B    | 0        | 1        | NA           | $-1$ |
+| A    | 1        | 0        | -1         | NA       |
+| B    | 0        | 1        | NA           | -1 |
 | C    | 0        | 0        | NA           | NA       |
-| D    | 1        | 1        | $0$          | $1$ |
+| D    | 1        | 1        | 0          | 1 |
 
 Table: Causal Types 
 
@@ -58,40 +58,34 @@ Table: Causal Types
 This design can be declared formally like this:
 
 ```{r}
-### Model -------------------------------------------------------------------
+# Model -------------------------------------------------------------------
 population <- declare_population(
-  N = 500,
+  N = 500, noise = rnorm(N),
   type = sample(1:4, N, replace = TRUE, prob = c(0, 1/3, 1/3, 1/3)),
-  A = type == 1, B = type == 2, C = type == 3, D = type == 4,
-  noise = rnorm(N))
+  A = type == 1, B = type == 2, C = type == 3, D = type == 4)
 
 pos <- declare_potential_outcomes(
   R_Z_0 = A|D,   # A and D types report in the control condition
   R_Z_1 = B|D,   # B and D types report in the treatment condition
   Y_Z_0 = ifelse(R_Z_0, 0*D - 1*A + noise, NA),
-  Y_Z_1 = ifelse(R_Z_1, 1*D - 1*B + noise, NA)
-)
+  Y_Z_1 = ifelse(R_Z_1, 1*D - 1*B + noise, NA))
 
 # Inquiry -----------------------------------------------------------------
-estimand_1 <- declare_estimand(ATE_R = mean(R_Z_1 - R_Z_0))
-estimand_2 <- declare_estimand(ATE_Y = mean(Y_Z_1 - Y_Z_0))
-estimand_3 <- declare_estimand(ATE_Y_for_Ds = mean(Y_Z_1[D] - Y_Z_0[D]))
+estimands <- declare_estimand( ATE_R = mean(R_Z_1 - R_Z_0),
+                               ATE_Y = mean(Y_Z_1 - Y_Z_0),
+                               ATE_Y_for_Ds = mean(Y_Z_1[D] - Y_Z_0[D]))
 
 # Data Strategy -----------------------------------------------------------
-assignment <- declare_assignment(m = 250)
+assignment <- declare_assignment()
 reveal     <- declare_reveal(outcome_variables = c("R", "Y"))
 
 # Answer Strategy ---------------------------------------------------------
-est_1 <- declare_estimator(R ~ Z, estimand = estimand_1, 
-                           label = "DIM_R")
-est_2 <- declare_estimator(Y ~ Z, estimand = list(estimand_2, estimand_3), 
+est1 <- declare_estimator(R ~ Z, estimand = "ATE_R", label = "DIM_R")
+est2 <- declare_estimator(Y ~ Z, estimand = list("ATE_Y", "ATE_Y_for_Ds"), 
                            label = "DIM_Y")
 
 # Design ------------------------------------------------------------------
-design <-   population / pos / 
-            estimand_1 / estimand_2 / estimand_3 / 
-            assignment / reveal /
-            est_1      / est_2
+design <- population / pos / estimands / assignment / reveal / est1 / est2
 ```
 
 ### What we find from diagnosis
@@ -133,4 +127,5 @@ Some puzzles:
 1. The amount of bias on the third estimand depends on both the distribution of types and the correlation of types with the potential outcomes of *Y*. Modify the declaration so that the estimator of the effect on *Y* is unbiased, changing only the distribution of types. Repeat the exercise, changing only the relation between the types and  the potential outcomes of $Y$.  
 
 2. Try approaching the problem by redefining the inquiry, seeking to assess the effect of treatment on the share of responses with positive tone. 
+
 
