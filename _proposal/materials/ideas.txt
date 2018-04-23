@@ -1,1 +1,0 @@
-Use learnr for interactive exercises. Kind of an open source version of data camp, so perfect for us? https://blog.rstudio.com/2017/07/11/introducing-learnr/

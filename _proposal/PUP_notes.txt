@@ -1,8 +1,0 @@
-We need to add language that makes explicit the connection between the software and the text in the book. How would you use the book if you didn't use the software at all? What would you get out of it? What would you get if you also used the software?
-
-We need to select a set of reviewers and reviewers to ding
-
-They will be reviewing:
-- what is pedagogical content?
-- what is the intellectual contribution?
-- what is its value as a desk reference?

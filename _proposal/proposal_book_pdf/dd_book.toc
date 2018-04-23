@@ -1,4 +1,0 @@
-\contentsline {section}{Simple Random Sampling}{2}
-\contentsline {section}{Regression Discontinuity}{5}
-\contentsline {section}{Questions Should Have Answers}{9}
-\contentsfinish 
