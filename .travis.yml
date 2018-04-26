@@ -9,11 +9,14 @@ cache:
   packages: yes
   directories:
     - $HOME/bin
+
+r_packages:
+  - bookdown
+  - checkpoint
     
 r_github_packages:
   - DeclareDesign/DeclareDesign
-  - rstudio/bookdown
 
 script:
-  - ls
+  - Rscript -e 'found_packages <- scanForPackages(".", use.knitr = TRUE)$pkgs; install.packages(found_packages)'
   - Rscript -e 'bookdown::render_book("index.Rmd", "bookdown::gitbook")'
