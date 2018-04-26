@@ -21,3 +21,9 @@ r_github_packages:
 script:
   - Rscript -e 'library(checkpoint); found_packages <- scanForPackages(".", use.knitr = TRUE)$pkgs; if(length(found_packages[!found_packages%in% installed.packages()]) > 0) install.packages(found_packages[!found_packages%in% installed.packages()])'
   - Rscript -e 'bookdown::render_book("index.Rmd", "bookdown::gitbook")'
+
+before_deploy:
+  - go get -d github.com/netlify/netlifyctl
+  - cd $GOPATH/src/github.com/netlify/netlifyctl
+  - make deps build
+  - go install
