@@ -19,5 +19,5 @@ r_github_packages:
   - DeclareDesign/designs
 
 script:
-  - Rscript -e 'library(checkpoint); found_packages <- scanForPackages(".", use.knitr = TRUE)$pkgs; install.packages(found_packages[!found_packages%in% installed.packages()])'
+  - Rscript -e 'library(checkpoint); found_packages <- scanForPackages(".", use.knitr = TRUE)$pkgs; if(length(found_packages[!found_packages%in% installed.packages()]) > 0) install.packages(found_packages[!found_packages%in% installed.packages()])'
   - Rscript -e 'bookdown::render_book("index.Rmd", "bookdown::gitbook")'
