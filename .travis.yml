@@ -12,6 +12,7 @@ cache:
     
 r_github_packages:
   - DeclareDesign/DeclareDesign
+  - rstudio/blogdown
 
 before_script:
   - Rscript -e 'blogdown::install_hugo()'
