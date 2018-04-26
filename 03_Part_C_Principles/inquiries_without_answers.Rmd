@@ -10,7 +10,7 @@ unlink(tempR)
 ```{r setup, include=FALSE}
 library(DeclareDesign)
 library(knitr)
-library(DesignLibrary)
+library(designs)
 sims = 2000
 ```
 
@@ -57,7 +57,7 @@ Table: Causal Types
 
 This design can be declared formally like this:
 
-```{r}
+```{r, eval = FALSE}
 ### Model -------------------------------------------------------------------
 population <- declare_population(
   N = 500,
@@ -98,11 +98,11 @@ design <-   population / pos /
 
 Here is a diagnosis of this design:
 
-```{r}
+```{r, eval = FALSE}
 diagnosis <- diagnose_design(design, sims = sims)
 ```
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, eval = FALSE}
 kable(reshape_diagnosis(diagnosis, col.names = "default")[,-2])
 ```
 
