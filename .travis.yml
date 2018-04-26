@@ -28,7 +28,7 @@ before_deploy:
 deploy:
   provider: script
   script:
-    - 'if [ "$TRAVIS_BRANCH" != "master" ]; then ./netlifyctl deploy --draft --base-directory "public" --site-id "$NETLIFY_SITE_ID" --access-token "$NETLIFY_ACCESS_TOKEN"; else ./netlifyctl deploy --base-directory "public" --site-id "$NETLIFY_SITE_ID" --access-token "$NETLIFY_ACCESS_TOKEN"; fi'
+    - 'if [ "$TRAVIS_BRANCH" != "master" ]; then ./netlifyctl deploy --draft --base-directory "_book" --site-id "$NETLIFY_SITE_ID" --access-token "$NETLIFY_ACCESS_TOKEN"; else ./netlifyctl deploy --base-directory "_book" --site-id "$NETLIFY_SITE_ID" --access-token "$NETLIFY_ACCESS_TOKEN"; fi'
   skip_cleanup: true
   on:
     all_branches: true
