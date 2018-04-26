@@ -15,4 +15,5 @@ r_github_packages:
   - rstudio/blogdown
 
 script:
+  - ls
   - Rscript -e 'bookdown::render_book('index.Rmd', 'bookdown::gitbook')'
