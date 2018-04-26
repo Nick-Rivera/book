@@ -23,10 +23,7 @@ script:
   - Rscript -e 'bookdown::render_book("index.Rmd", "bookdown::gitbook")'
 
 before_deploy:
-  - go get -d github.com/netlify/netlifyctl
-  - cd $GOPATH/src/github.com/netlify/netlifyctl
-  - make deps build
-  - go install
+  - wget -qO- 'https://github.com/netlify/netlifyctl/releases/download/v0.3.2/netlifyctl-linux-amd64-0.3.2.tar.gz' | tar xvz
 
 deploy:
   provider: script
