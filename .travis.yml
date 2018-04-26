@@ -12,7 +12,7 @@ cache:
     
 r_github_packages:
   - DeclareDesign/DeclareDesign
-  - rstudio/blogdown
+  - rstudio/bookdown
 
 script:
   - ls
