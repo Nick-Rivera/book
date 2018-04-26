@@ -16,4 +16,4 @@ r_github_packages:
 
 script:
   - ls
-  - Rscript -e 'bookdown::render_book('index.Rmd', 'bookdown::gitbook')'
+  - Rscript -e 'bookdown::render_book("index.Rmd", "bookdown::gitbook")'
