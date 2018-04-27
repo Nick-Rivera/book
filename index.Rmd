@@ -22,7 +22,7 @@ output:
     css: style.css
     split_by: section
 bibliography: [bib.bib, packages.bib]
-description: "Design design design."
+description: "Declaring and diagnosing research designs in the model, inquiry, data strategy, analysis strategy (MIDA) framework"
 documentclass: book
 fontfamily: mathpazo
 fontsize: 11pt
@@ -87,7 +87,7 @@ dd_theme <-
 
 # Welcome {-}
 
-In *Declaring and Diagnosing Research Designs*, we aim to present a comprehensive view of research designs in the social sciences.
+In *Declaring and Diagnosing Research Designs*, we aim to present a comprehensive way of thinking about research designs in the social sciences. 
 
 
 
