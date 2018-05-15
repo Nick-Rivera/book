@@ -19,9 +19,9 @@ sims = 500
 
 An obvious requirement of a good research design is that the question it seeks to answer does in fact *have* an answer, at least under plausible models of the world. 
 
-Interestingly, we can sometimes get quite far along a research path without being  conscious that the questions we ask do not have answers and the answers we get are answering different questions. 
+Interestingly, we can sometimes get quite far along a research path without being conscious that the questions we ask do not have answers and the answers we get are answering different questions. 
 
-Fortunately, when we ask a computer to answer such a question, it complains.
+Fortunately, computers complain when they are asked to answer badly posted questions.
 
 How could a question not have an answer? Answerless questions can arise when inquiries depend on variables that do not exist or are undefined for some units. 
 
@@ -58,6 +58,7 @@ Table: Causal Types
 This design can be declared formally like this:
 
 ```{r}
+
 # Model -------------------------------------------------------------------
 population <- declare_population(
   N = 500, noise = rnorm(N),
