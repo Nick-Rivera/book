@@ -1,14 +1,34 @@
 language: r
-cache: packages
+sudo: false
 
-env:
-  global:
-    - secure: "InF/z62wD/4enP/GKotyZp399PsOMpO+Gn8lc7AH7+4drYLU+u/hAfH56Qm4PpPtY9kdK3ZCYAmFnfP0Tnbi3mGyfeT2InqCPe6p3EDGwVI+l5QJ+dJU5RyBdnJ18Big4wYJ9osybQTmuHDzjH5sI15ozUMsXoxmanZlvFK+Xj3H0objDRiCaY3CsDZ8KutRoXuXL/ODD/h2Au5JM2UG8QSBdsYil5DTRl6gYKDj3yGl+52jb7QVrEpkMZECzgRvep+KApQPTU0jPAJmSPvKKAo2gm3C5C+ZAeKORzJpS3N1USjI8buxXdDAK49bFIfbLYMgJk2pjuKbDQ3WAaJVo7pgVNq/foXH913/jJQoS/0/VBKZlr+ZtwNjHRq12asGX7L8U5i21ENky5wQp/GnJYU6GP1bMA7gxnJMFcHD0Jb8V805iPrJWzj07gkkZ4nnv44IDzDuNBEp+psI01r/rrJ2oqUzkiOnESthCT50UG4qDDdKyQIVgh7kLKzyB6psgdsi+ntXvQbHEnrk1gCW2jxYlSxqmhiKL1FqeUNFPWINcQ7RQbXtSIfcFa4PQi/J5as0dYv2JlmWjjnTr1i2V6Z7iiROOrJzypGuxPn6hrE2cQcCG6/3cfQP5CikodCgBRLX+9rrMML8mgc/QXcV4TxCpGgLnV6E7vFCSlThg6M="
+branches:
+  only:
+    - master
 
-before_script:
-  - chmod +x ./_build.sh
-  - chmod +x ./_deploy.sh
+cache:
+  packages: yes
+  directories:
+    - $HOME/bin
+
+r_packages:
+  - bookdown
+  - checkpoint
+    
+r_github_packages:
+  - DeclareDesign/DeclareDesign
+  - DeclareDesign/designs
 
 script:
-  - ./_build.sh
-  - ./_deploy.sh
+  - Rscript -e 'library(checkpoint); found_packages <- scanForPackages(".", use.knitr = TRUE)$pkgs; if(length(found_packages[!found_packages%in% installed.packages()]) > 0) install.packages(found_packages[!found_packages%in% installed.packages()])'
+  - Rscript -e 'bookdown::render_book("index.Rmd", "bookdown::gitbook")'
+
+before_deploy:
+  - wget -qO- 'https://github.com/netlify/netlifyctl/releases/download/v0.3.2/netlifyctl-linux-amd64-0.3.2.tar.gz' | tar xvz
+
+deploy:
+  provider: script
+  script:
+    - 'if [ "$TRAVIS_BRANCH" != "master" ]; then ./netlifyctl deploy --draft --base-directory "_book" --site-id "$NETLIFY_SITE_ID" --access-token "$NETLIFY_ACCESS_TOKEN"; else ./netlifyctl deploy --base-directory "_book" --site-id "$NETLIFY_SITE_ID" --access-token "$NETLIFY_ACCESS_TOKEN"; fi'
+  skip_cleanup: true
+  on:
+    all_branches: true

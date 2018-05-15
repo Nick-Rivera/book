@@ -8,7 +8,7 @@ unlink(tempR)
 ```
 
 ```{r, include = FALSE}
-library(DesignLibrary)
+library(designs)
 library(DeclareDesign)
 ```
 
