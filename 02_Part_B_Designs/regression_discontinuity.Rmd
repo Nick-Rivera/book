@@ -1,4 +1,4 @@
-```{r, include=FALSE, eval=TRUE}
+```{r, include=FALSE, eval=FALSE}
 tempR <- tempfile(fileext = ".R")
 library(knitr)
 purl("../index.Rmd", output = tempR)
