@@ -8,7 +8,7 @@ unlink(tempR)
 ```
 
 ```{r, include = FALSE}
-library(designs)
+library(DesignLibrary)
 library(DeclareDesign)
 ```
 
@@ -39,8 +39,8 @@ Imagine we seek to estimate the average political ideology of residents of the s
 ```{r}
 # Model -------------------------------------------------------------------
 N <- 2100
-population <- declare_population(N = N, Y = sample(1:7, N, replace = TRUE))
-fixed_population <- population()
+fixed_population <- declare_population(N = N, Y = sample(1:7, N, replace = TRUE))()
+population <- declare_population(data = fixed_population)
 
 # Inquiry -----------------------------------------------------------------
 estimand <- declare_estimand(Ybar = mean(Y))
@@ -50,24 +50,15 @@ n <- 100
 sampling <- declare_sampling(n = n)
 
 # Answer Strategy ---------------------------------------------------------
-estimator <- declare_estimator(
-  estimator_function = function(data) {
-      est <- mean(data$Y)
-      se  <- sd(data$Y) * sqrt((N / n - 1) / (N - 1))
-      critical_value <- qt(0.975, df = n - 1)
-      ci_lower <- est - critical_value * se
-      ci_upper <- est + critical_value * se
-      data.frame(est, ci_lower, ci_upper)}, 
-  estimand = estimand,
-  label = "Sample Mean Estimator")
+estimator <- declare_estimator(Y ~ 1,
+                               model = lm_robust,
+                                       estimand = estimand,
+                                       label = "Sample Mean Estimator")
 
 # Design ------------------------------------------------------------------
-design <- declare_design(fixed_population, estimand, sampling, estimator)
-diagnosands <- declare_diagnosands(
-  bias = mean(est - estimand),
-  mean_est = mean(est),
-  coverage = mean(ci_lower <= estimand & estimand <= ci_upper)
-  )
+design <- population + estimand +  sampling + estimator
+
+diagnosands <- declare_diagnosands(select = c(bias, coverage, mean_estimate, sd_estimate))
 ```
 
 ### Takeaways
@@ -76,7 +67,7 @@ With the design declared we can run a diagnosis and plot results from Monte Carl
 
 ```{r, eval = FALSE}
 diagnosis <- diagnose_design(
-  design, sims = 10000, bootstrap_sims = 1000, diagnosands = diagnosands)
+  design, sims = 10000, bootstrap_sims = 1000, diagnosands = diagnosands) 
 ```
 
 

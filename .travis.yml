@@ -13,10 +13,10 @@ cache:
 r_packages:
   - bookdown
   - checkpoint
-    
+
 r_github_packages:
   - DeclareDesign/DeclareDesign
-  - DeclareDesign/designs
+  - DeclareDesign/DesignLibrary
 
 script:
   - Rscript -e 'library(checkpoint); found_packages <- scanForPackages(".", use.knitr = TRUE)$pkgs; if(length(found_packages[!found_packages%in% installed.packages()]) > 0) install.packages(found_packages[!found_packages%in% installed.packages()])'
