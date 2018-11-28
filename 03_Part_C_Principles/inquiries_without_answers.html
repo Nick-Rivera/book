@@ -125,7 +125,7 @@ $(document).ready(function () {
 <h2>Some designs have badly posed questions but design diagnosis can alert you to the problem</h2>
 <p>An obvious requirement of a good research design is that the question it seeks to answer does in fact <em>have</em> an answer, at least under plausible models of the world.</p>
 <p>Interestingly, we can sometimes get quite far along a research path without being conscious that the questions we ask do not have answers and the answers we get are answering different questions.</p>
-<p>Fortunately, when we ask a computer to answer such a question, it complains.</p>
+<p>Fortunately, computers complain when they are asked to answer badly posted questions.</p>
 <p>How could a question not have an answer? Answerless questions can arise when inquiries depend on variables that do not exist or are undefined for some units.</p>
 <p>Consider an audit experiment that seeks to assess the effects of an email from a Latino name (versus a White name) on <em>whether</em> and <em>how well</em> election officials respond to requests for information. For example, do they use a positive or negative tone. These questions seem reasonable enough. The problem, however, is that if there are officials who don’t send responses, tone is undefined. More subtly, if there is an official that does send an email but would not have sent it in a different treatment condition, then tone is undefined for one of their potential outcomes.</p>
 <div id="a-design-with-sometimes-undefined-outcomes" class="section level3">
@@ -158,7 +158,7 @@ $(document).ready(function () {
 <td>A</td>
 <td>1</td>
 <td>0</td>
-<td><span class="math inline">\(-1\)</span></td>
+<td>-1</td>
 <td>NA</td>
 </tr>
 <tr class="even">
@@ -166,7 +166,7 @@ $(document).ready(function () {
 <td>0</td>
 <td>1</td>
 <td>NA</td>
-<td><span class="math inline">\(-1\)</span></td>
+<td>-1</td>
 </tr>
 <tr class="odd">
 <td>C</td>
@@ -179,8 +179,8 @@ $(document).ready(function () {
 <td>D</td>
 <td>1</td>
 <td>1</td>
-<td><span class="math inline">\(0\)</span></td>
-<td><span class="math inline">\(1\)</span></td>
+<td>0</td>
+<td>1</td>
 </tr>
 </tbody>
 </table>
@@ -190,45 +190,157 @@ $(document).ready(function () {
 <li><p><strong>A</strong>nswer strategy: We’ll try to answer all three inquiries with the difference-in-means estimator.</p></li>
 </ul>
 <p>This design can be declared formally like this:</p>
-<pre class="r"><code>### Model -------------------------------------------------------------------
+<pre class="r"><code># Model -------------------------------------------------------------------
 population &lt;- declare_population(
-  N = 500,
+  N = 500, noise = rnorm(N),
   type = sample(1:4, N, replace = TRUE, prob = c(0, 1/3, 1/3, 1/3)),
-  A = type == 1, B = type == 2, C = type == 3, D = type == 4,
-  noise = rnorm(N))
+  A = type == 1, B = type == 2, C = type == 3, D = type == 4)
 
 pos &lt;- declare_potential_outcomes(
   R_Z_0 = A|D,   # A and D types report in the control condition
   R_Z_1 = B|D,   # B and D types report in the treatment condition
   Y_Z_0 = ifelse(R_Z_0, 0*D - 1*A + noise, NA),
-  Y_Z_1 = ifelse(R_Z_1, 1*D - 1*B + noise, NA)
-)
+  Y_Z_1 = ifelse(R_Z_1, 1*D - 1*B + noise, NA))
 
 # Inquiry -----------------------------------------------------------------
-estimand_1 &lt;- declare_estimand(ATE_R = mean(R_Z_1 - R_Z_0))
-estimand_2 &lt;- declare_estimand(ATE_Y = mean(Y_Z_1 - Y_Z_0))
-estimand_3 &lt;- declare_estimand(ATE_Y_for_Ds = mean(Y_Z_1[D] - Y_Z_0[D]))
+estimands &lt;- declare_estimand( ATE_R = mean(R_Z_1 - R_Z_0),
+                               ATE_Y = mean(Y_Z_1 - Y_Z_0),
+                               ATE_Y_for_Ds = mean(Y_Z_1[D] - Y_Z_0[D]))
 
 # Data Strategy -----------------------------------------------------------
-assignment &lt;- declare_assignment(m = 250)
+assignment &lt;- declare_assignment()
 reveal     &lt;- declare_reveal(outcome_variables = c(&quot;R&quot;, &quot;Y&quot;))
 
 # Answer Strategy ---------------------------------------------------------
-est_1 &lt;- declare_estimator(R ~ Z, estimand = estimand_1, 
-                           label = &quot;DIM_R&quot;)
-est_2 &lt;- declare_estimator(Y ~ Z, estimand = list(estimand_2, estimand_3), 
+est1 &lt;- declare_estimator(R ~ Z, estimand = &quot;ATE_R&quot;, label = &quot;DIM_R&quot;)
+est2 &lt;- declare_estimator(Y ~ Z, estimand = list(&quot;ATE_Y&quot;, &quot;ATE_Y_for_Ds&quot;), 
                            label = &quot;DIM_Y&quot;)
 
 # Design ------------------------------------------------------------------
-design &lt;-   population / pos / 
-            estimand_1 / estimand_2 / estimand_3 / 
-            assignment / reveal /
-            est_1      / est_2</code></pre>
+design &lt;- population + pos + estimands + assignment + reveal + est1 + est2</code></pre>
 </div>
 <div id="what-we-find-from-diagnosis" class="section level3">
 <h3>What we find from diagnosis</h3>
 <p>Here is a diagnosis of this design:</p>
 <pre class="r"><code>diagnosis &lt;- diagnose_design(design, sims = sims)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Design Label</th>
+<th align="left">Estimator Label</th>
+<th align="left">Coefficient</th>
+<th align="right">N Sims</th>
+<th align="left">Statistic</th>
+<th align="left">Bias</th>
+<th align="left">RMSE</th>
+<th align="left">Power</th>
+<th align="left">Coverage</th>
+<th align="left">Mean Estimate</th>
+<th align="left">SD Estimate</th>
+<th align="left">Mean Se</th>
+<th align="left">Type S Rate</th>
+<th align="left">Mean Estimand</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">design</td>
+<td align="left">DIM_R</td>
+<td align="left">Z</td>
+<td align="right">50</td>
+<td align="left">Diagnosand Estimate</td>
+<td align="left">-0.01</td>
+<td align="left">0.03</td>
+<td align="left">1.00</td>
+<td align="left">1.00</td>
+<td align="left">0.32</td>
+<td align="left">0.03</td>
+<td align="left">0.04</td>
+<td align="left">0.00</td>
+<td align="left">0.33</td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="right">50</td>
+<td align="left">SE (bootstrapped)</td>
+<td align="left">(0.00)</td>
+<td align="left">(0.00)</td>
+<td align="left">(0.00)</td>
+<td align="left">(0.00)</td>
+<td align="left">(0.00)</td>
+<td align="left">(0.00)</td>
+<td align="left">(0.00)</td>
+<td align="left">(0.00)</td>
+<td align="left">(0.00)</td>
+</tr>
+<tr class="odd">
+<td align="left">design</td>
+<td align="left">DIM_Y</td>
+<td align="left">Z</td>
+<td align="right">50</td>
+<td align="left">Diagnosand Estimate</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">0.06</td>
+<td align="left">NA</td>
+<td align="left">0.00</td>
+<td align="left">0.15</td>
+<td align="left">0.15</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="right">50</td>
+<td align="left">SE (bootstrapped)</td>
+<td align="left">(NA)</td>
+<td align="left">(NA)</td>
+<td align="left">(0.04)</td>
+<td align="left">(NA)</td>
+<td align="left">(0.02)</td>
+<td align="left">(0.02)</td>
+<td align="left">(0.00)</td>
+<td align="left">(NA)</td>
+<td align="left">(NA)</td>
+</tr>
+<tr class="odd">
+<td align="left">design</td>
+<td align="left">DIM_Y</td>
+<td align="left">Z</td>
+<td align="right">50</td>
+<td align="left">Diagnosand Estimate</td>
+<td align="left">-1.00</td>
+<td align="left">1.01</td>
+<td align="left">0.06</td>
+<td align="left">0.00</td>
+<td align="left">0.00</td>
+<td align="left">0.15</td>
+<td align="left">0.15</td>
+<td align="left">0.67</td>
+<td align="left">1.00</td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="right">50</td>
+<td align="left">SE (bootstrapped)</td>
+<td align="left">(0.02)</td>
+<td align="left">(0.02)</td>
+<td align="left">(0.04)</td>
+<td align="left">(0.00)</td>
+<td align="left">(0.02)</td>
+<td align="left">(0.02)</td>
+<td align="left">(0.00)</td>
+<td align="left">(NA)</td>
+<td align="left">(0.00)</td>
+</tr>
+</tbody>
+</table>
 <p>We learn three things from the design diagnosis.</p>
 <ul>
 <li><p>First, as expected, our experiment is unbiased for the average treatment effect on response.</p></li>

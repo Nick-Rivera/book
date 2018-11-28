@@ -86,7 +86,7 @@ est2 <- declare_estimator(Y ~ Z, estimand = list("ATE_Y", "ATE_Y_for_Ds"),
                            label = "DIM_Y")
 
 # Design ------------------------------------------------------------------
-design <- population / pos / estimands / assignment / reveal / est1 / est2
+design <- population + pos + estimands + assignment + reveal + est1 + est2
 ```
 
 ### What we find from diagnosis
