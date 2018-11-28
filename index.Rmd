@@ -3,15 +3,17 @@ title: "Declaring and Diagnosing Research Designs"
 author: "Graeme Blair, Jasper Cooper, Alexander Coppock, Macartan Humphreys"
 output:
   bookdown::gitbook:
+    includes:
+      in_header: [hypothesis.html]
     config:
       download: []
       toc:
         after: |
-          <li><a href="http://DeclareDesign.org" target="blank">DeclareDesign</a></li>
+          <li><a href="https://declaredesign.org" target="blank">DeclareDesign</a></li>
         before: |
           <li><a href="./">Declaring and Diagnosing Research Designs</a></li>
         collapse: section
-      sharing: 
+      sharing:
         all: false
         github: false
         facebook: false
@@ -87,7 +89,4 @@ dd_theme <-
 
 # Welcome {-}
 
-In *Declaring and Diagnosing Research Designs*, we aim to present a comprehensive way of thinking about research designs in the social sciences. 
-
-
-
+In *Declaring and Diagnosing Research Designs*, we aim to present a comprehensive way of thinking about research designs in the social sciences.
