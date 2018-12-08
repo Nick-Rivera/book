@@ -22,13 +22,11 @@ script:
   - Rscript -e 'library(checkpoint); found_packages <- scanForPackages(".", use.knitr = TRUE)$pkgs; if(length(found_packages[!found_packages%in% installed.packages()]) > 0) install.packages(found_packages[!found_packages%in% installed.packages()])'
   - Rscript -e 'bookdown::render_book("index.Rmd", "bookdown::gitbook")'
 
-before_deploy:
-  - wget -qO- 'https://github.com/netlify/netlifyctl/releases/download/v0.3.2/netlifyctl-linux-amd64-0.3.2.tar.gz' | tar xvz
-
 deploy:
-  provider: script
-  script:
-    - 'if [ "$TRAVIS_BRANCH" != "master" ]; then ./netlifyctl deploy --draft --base-directory "_book" --site-id "$NETLIFY_SITE_ID" --access-token "$NETLIFY_ACCESS_TOKEN"; else ./netlifyctl deploy --base-directory "_book" --site-id "$NETLIFY_SITE_ID" --access-token "$NETLIFY_ACCESS_TOKEN"; fi'
-  skip_cleanup: true
+  local-dir: public
+  provider: pages
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN
+  keep-history: true
   on:
-    all_branches: true
+    branch: master
