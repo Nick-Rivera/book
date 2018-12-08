@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>3.1 Some designs have badly posed questions but design diagnosis can alert you to the problem | Declaring and Diagnosing Research Designs</title>
+  <meta name="description" content="Declaring and diagnosing research designs in the model, inquiry, data strategy, analysis strategy (MIDA) framework">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+
+  <meta property="og:title" content="3.1 Some designs have badly posed questions but design diagnosis can alert you to the problem | Declaring and Diagnosing Research Designs" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Declaring and diagnosing research designs in the model, inquiry, data strategy, analysis strategy (MIDA) framework" />
+  <meta name="github-repo" content="rstudio/rdb" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="3.1 Some designs have badly posed questions but design diagnosis can alert you to the problem | Declaring and Diagnosing Research Designs" />
+  
+  <meta name="twitter:description" content="Declaring and diagnosing research designs in the model, inquiry, data strategy, analysis strategy (MIDA) framework" />
+  
+
+<meta name="author" content="Graeme Blair, Jasper Cooper, Alexander Coppock, Macartan Humphreys">
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="inquiry-principles.html">
+<link rel="next" href="references.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+<script src="https://hypothes.is/embed.js" async></script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Declaring and Diagnosing Research Designs</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>What we are at</a></li>
+<li class="part"><span><b>I Declaring and Diagnosing Research Designs</b></span></li>
+<li class="part"><span><b>II Design Library</b></span></li>
+<li class="chapter" data-level="1" data-path="observational-designs-for-descriptive-inference.html"><a href="observational-designs-for-descriptive-inference.html"><i class="fa fa-check"></i><b>1</b> Observational designs for descriptive inference</a><ul>
+<li class="chapter" data-level="1.1" data-path="simple-random-sampling.html"><a href="simple-random-sampling.html"><i class="fa fa-check"></i><b>1.1</b> Simple Random Sampling</a><ul>
+<li class="chapter" data-level="1.1.1" data-path="simple-random-sampling.html"><a href="simple-random-sampling.html#design-declaration"><i class="fa fa-check"></i><b>1.1.1</b> Design Declaration</a></li>
+<li class="chapter" data-level="1.1.2" data-path="simple-random-sampling.html"><a href="simple-random-sampling.html#takeaways"><i class="fa fa-check"></i><b>1.1.2</b> Takeaways</a></li>
+<li class="chapter" data-level="1.1.3" data-path="simple-random-sampling.html"><a href="simple-random-sampling.html#exercises"><i class="fa fa-check"></i><b>1.1.3</b> Exercises</a></li>
+<li class="chapter" data-level="1.1.4" data-path="simple-random-sampling.html"><a href="simple-random-sampling.html#design-inspector"><i class="fa fa-check"></i><b>1.1.4</b> Design Inspector</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="observational-designs-for-causal-inference.html"><a href="observational-designs-for-causal-inference.html"><i class="fa fa-check"></i><b>2</b> Observational designs for causal inference</a><ul>
+<li class="chapter" data-level="2.1" data-path="regression-discontinuity.html"><a href="regression-discontinuity.html"><i class="fa fa-check"></i><b>2.1</b> Regression Discontinuity</a><ul>
+<li class="chapter" data-level="2.1.1" data-path="regression-discontinuity.html"><a href="regression-discontinuity.html#design-declaration-1"><i class="fa fa-check"></i><b>2.1.1</b> Design Declaration</a></li>
+<li class="chapter" data-level="2.1.2" data-path="regression-discontinuity.html"><a href="regression-discontinuity.html#takeaways-1"><i class="fa fa-check"></i><b>2.1.2</b> Takeaways</a></li>
+<li class="chapter" data-level="2.1.3" data-path="regression-discontinuity.html"><a href="regression-discontinuity.html#further-reading"><i class="fa fa-check"></i><b>2.1.3</b> Further Reading</a></li>
+<li class="chapter" data-level="2.1.4" data-path="regression-discontinuity.html"><a href="regression-discontinuity.html#exercises-1"><i class="fa fa-check"></i><b>2.1.4</b> Exercises</a></li>
+<li class="chapter" data-level="2.1.5" data-path="regression-discontinuity.html"><a href="regression-discontinuity.html#design-inspector-1"><i class="fa fa-check"></i><b>2.1.5</b> Design Inspector</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>III Principles of Research Designs</b></span></li>
+<li class="chapter" data-level="3" data-path="inquiry-principles.html"><a href="inquiry-principles.html"><i class="fa fa-check"></i><b>3</b> Inquiry principles</a><ul>
+<li class="chapter" data-level="3.1" data-path="some-designs-have-badly-posed-questions-but-design-diagnosis-can-alert-you-to-the-problem.html"><a href="some-designs-have-badly-posed-questions-but-design-diagnosis-can-alert-you-to-the-problem.html"><i class="fa fa-check"></i><b>3.1</b> Some designs have badly posed questions but design diagnosis can alert you to the problem</a><ul>
+<li class="chapter" data-level="3.1.1" data-path="some-designs-have-badly-posed-questions-but-design-diagnosis-can-alert-you-to-the-problem.html"><a href="some-designs-have-badly-posed-questions-but-design-diagnosis-can-alert-you-to-the-problem.html#a-design-with-sometimes-undefined-outcomes"><i class="fa fa-check"></i><b>3.1.1</b> A design with sometimes undefined outcomes</a></li>
+<li class="chapter" data-level="3.1.2" data-path="some-designs-have-badly-posed-questions-but-design-diagnosis-can-alert-you-to-the-problem.html"><a href="some-designs-have-badly-posed-questions-but-design-diagnosis-can-alert-you-to-the-problem.html#what-we-find-from-diagnosis"><i class="fa fa-check"></i><b>3.1.2</b> What we find from diagnosis</a></li>
+<li class="chapter" data-level="3.1.3" data-path="some-designs-have-badly-posed-questions-but-design-diagnosis-can-alert-you-to-the-problem.html"><a href="some-designs-have-badly-posed-questions-but-design-diagnosis-can-alert-you-to-the-problem.html#other-instances-of-this-problem"><i class="fa fa-check"></i><b>3.1.3</b> Other instances of this problem</a></li>
+<li class="chapter" data-level="3.1.4" data-path="some-designs-have-badly-posed-questions-but-design-diagnosis-can-alert-you-to-the-problem.html"><a href="some-designs-have-badly-posed-questions-but-design-diagnosis-can-alert-you-to-the-problem.html#keep-thinking"><i class="fa fa-check"></i><b>3.1.4</b> Keep thinking</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>IV Putting Declared Designs to Use</b></span></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://declaredesign.org" target="blank">DeclareDesign</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Declaring and Diagnosing Research Designs</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="some-designs-have-badly-posed-questions-but-design-diagnosis-can-alert-you-to-the-problem" class="section level2">
+<h2><span class="header-section-number">3.1</span> Some designs have badly posed questions but design diagnosis can alert you to the problem</h2>
+<p>An obvious requirement of a good research design is that the question it seeks to answer does in fact <em>have</em> an answer, at least under plausible models of the world.</p>
+<p>Interestingly, we can sometimes get quite far along a research path without being conscious that the questions we ask do not have answers and the answers we get are answering different questions.</p>
+<p>Fortunately, computers complain when they are asked to answer badly posted questions.</p>
+<p>How could a question not have an answer? Answerless questions can arise when inquiries depend on variables that do not exist or are undefined for some units.</p>
+<p>Consider an audit experiment that seeks to assess the effects of an email from a Latino name (versus a White name) on <em>whether</em> and <em>how well</em> election officials respond to requests for information. For example, do they use a positive or negative tone. These questions seem reasonable enough. The problem, however, is that if there are officials who don’t send responses, tone is undefined. More subtly, if there is an official that does send an email but would not have sent it in a different treatment condition, then tone is undefined for one of their potential outcomes.</p>
+<div id="a-design-with-sometimes-undefined-outcomes" class="section level3">
+<h3><span class="header-section-number">3.1.1</span> A design with sometimes undefined outcomes</h3>
+<p>Here are the key parts to the design:</p>
+<ul>
+<li><p><strong>M</strong>odel: The model has two outcome variables, <span class="math inline">\(R_i\)</span> and <span class="math inline">\(Y_i\)</span>. <span class="math inline">\(R_i\)</span> stands for “response” and is equal to 1 if a response is sent, and 0 otherwise. <span class="math inline">\(Y_i\)</span> is the tone of the response and is normally distributed when it is defined. <span class="math inline">\(Z_i\)</span> is the treatment and equals 1 if the email is sent using a Latino name and 0 otherwise. The table below shows the potential outcomes for four possible types of subjects, depending on the potential outcomes of <span class="math inline">\(R_i\)</span>.</p>
+<ul>
+<li><em>A</em> types respond if and only if they are <em>not</em> treated</li>
+<li><em>B</em> types respond if and only if they are treated<br />
+</li>
+<li><em>C</em> types never respond, regardless of treatment</li>
+<li><em>D</em> types always respond regardless of treatment</li>
+</ul></li>
+</ul>
+<p>The table also includes columns for the potential outcomes of <span class="math inline">\(Y_i\)</span>, showing which potential outcome subjects would express depending on their type. The key thing to note is that for the <em>A</em>, <em>B</em>, and <em>C</em> types, the effect of treatment on <span class="math inline">\(Y_i\)</span> is <em>undefined</em> because messages never sent have no tone. The last (and very important) feature of our model is that the outcomes <span class="math inline">\(Y_i\)</span> are possibly correlated with subject type. Even though both <span class="math inline">\(E[Y_i(1) | \text{Type} = D]\)</span> and <span class="math inline">\(E[Y_i(1) | \text{Type} = B]\)</span> exist, there’s no reason to expect that they are the same.</p>
+<table>
+<caption>Causal Types</caption>
+<thead>
+<tr class="header">
+<th>Type</th>
+<th><span class="math inline">\(R_i(0)\)</span></th>
+<th><span class="math inline">\(R_i(1)\)</span></th>
+<th><span class="math inline">\(E(Y_i(0))\)</span></th>
+<th><span class="math inline">\(E(Y_i(1))\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A</td>
+<td>1</td>
+<td>0</td>
+<td>-1</td>
+<td>NA</td>
+</tr>
+<tr class="even">
+<td>B</td>
+<td>0</td>
+<td>1</td>
+<td>NA</td>
+<td>-1</td>
+</tr>
+<tr class="odd">
+<td>C</td>
+<td>0</td>
+<td>0</td>
+<td>NA</td>
+<td>NA</td>
+</tr>
+<tr class="even">
+<td>D</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p><strong>I</strong>nquiry: We have two inquiries. The first is straightforward: <span class="math inline">\(E[R_i(1) - R_i(0)]\)</span> is the Average Treatment Effect on response. The second inquiry is the undefined inquiry that does not have an answer: <span class="math inline">\(E[Y_i(1) - Y_i(0)]\)</span>. We will also consider a third inquiry, which <em>is</em> defined: <span class="math inline">\(E[Y_i(1) - Y_i(0) | \mathrm{Type} = D]\)</span>, which is the average effect of treatment on tone among <span class="math inline">\(D\)</span> types.</p></li>
+<li><p><strong>D</strong>ata strategy: The data strategy will be to use complete random assignment to assign 250 of 500 units to treatment.</p></li>
+<li><p><strong>A</strong>nswer strategy: We’ll try to answer all three inquiries with the difference-in-means estimator.</p></li>
+</ul>
+<p>This design can be declared formally like this:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Model -------------------------------------------------------------------</span>
+population &lt;-<span class="st"> </span><span class="kw">declare_population</span>(
+  <span class="dt">N =</span> <span class="dv">500</span>, <span class="dt">noise =</span> <span class="kw">rnorm</span>(N),
+  <span class="dt">type =</span> <span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, N, <span class="dt">replace =</span> <span class="ot">TRUE</span>, <span class="dt">prob =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>, <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>, <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>)),
+  <span class="dt">A =</span> type <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">B =</span> type <span class="op">==</span><span class="st"> </span><span class="dv">2</span>, <span class="dt">C =</span> type <span class="op">==</span><span class="st"> </span><span class="dv">3</span>, <span class="dt">D =</span> type <span class="op">==</span><span class="st"> </span><span class="dv">4</span>)
+
+pos &lt;-<span class="st"> </span><span class="kw">declare_potential_outcomes</span>(
+  <span class="dt">R_Z_0 =</span> A<span class="op">|</span>D,   <span class="co"># A and D types report in the control condition</span>
+  <span class="dt">R_Z_1 =</span> B<span class="op">|</span>D,   <span class="co"># B and D types report in the treatment condition</span>
+  <span class="dt">Y_Z_0 =</span> <span class="kw">ifelse</span>(R_Z_<span class="dv">0</span>, <span class="dv">0</span><span class="op">*</span>D <span class="op">-</span><span class="st"> </span><span class="dv">1</span><span class="op">*</span>A <span class="op">+</span><span class="st"> </span>noise, <span class="ot">NA</span>),
+  <span class="dt">Y_Z_1 =</span> <span class="kw">ifelse</span>(R_Z_<span class="dv">1</span>, <span class="dv">1</span><span class="op">*</span>D <span class="op">-</span><span class="st"> </span><span class="dv">1</span><span class="op">*</span>B <span class="op">+</span><span class="st"> </span>noise, <span class="ot">NA</span>))
+
+<span class="co"># Inquiry -----------------------------------------------------------------</span>
+estimands &lt;-<span class="st"> </span><span class="kw">declare_estimand</span>( <span class="dt">ATE_R =</span> <span class="kw">mean</span>(R_Z_<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>R_Z_<span class="dv">0</span>),
+                               <span class="dt">ATE_Y =</span> <span class="kw">mean</span>(Y_Z_<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>Y_Z_<span class="dv">0</span>),
+                               <span class="dt">ATE_Y_for_Ds =</span> <span class="kw">mean</span>(Y_Z_<span class="dv">1</span>[D] <span class="op">-</span><span class="st"> </span>Y_Z_<span class="dv">0</span>[D]))
+
+<span class="co"># Data Strategy -----------------------------------------------------------</span>
+assignment &lt;-<span class="st"> </span><span class="kw">declare_assignment</span>()
+reveal     &lt;-<span class="st"> </span><span class="kw">declare_reveal</span>(<span class="dt">outcome_variables =</span> <span class="kw">c</span>(<span class="st">&quot;R&quot;</span>, <span class="st">&quot;Y&quot;</span>))
+
+<span class="co"># Answer Strategy ---------------------------------------------------------</span>
+est1 &lt;-<span class="st"> </span><span class="kw">declare_estimator</span>(R <span class="op">~</span><span class="st"> </span>Z, <span class="dt">estimand =</span> <span class="st">&quot;ATE_R&quot;</span>, <span class="dt">label =</span> <span class="st">&quot;DIM_R&quot;</span>)
+est2 &lt;-<span class="st"> </span><span class="kw">declare_estimator</span>(Y <span class="op">~</span><span class="st"> </span>Z, <span class="dt">estimand =</span> <span class="kw">list</span>(<span class="st">&quot;ATE_Y&quot;</span>, <span class="st">&quot;ATE_Y_for_Ds&quot;</span>), 
+                           <span class="dt">label =</span> <span class="st">&quot;DIM_Y&quot;</span>)
+
+<span class="co"># Design ------------------------------------------------------------------</span>
+design &lt;-<span class="st"> </span>population <span class="op">+</span><span class="st"> </span>pos <span class="op">+</span><span class="st"> </span>estimands <span class="op">+</span><span class="st"> </span>assignment <span class="op">+</span><span class="st"> </span>reveal <span class="op">+</span><span class="st"> </span>est1 <span class="op">+</span><span class="st"> </span>est2</code></pre>
+</div>
+<div id="what-we-find-from-diagnosis" class="section level3">
+<h3><span class="header-section-number">3.1.2</span> What we find from diagnosis</h3>
+<p>Here is a diagnosis of this design:</p>
+<pre class="sourceCode r"><code class="sourceCode r">diagnosis &lt;-<span class="st"> </span><span class="kw">diagnose_design</span>(design, <span class="dt">sims =</span> sims)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Design Label</th>
+<th align="left">Estimator Label</th>
+<th align="left">Term</th>
+<th align="left">N Sims</th>
+<th align="left">Bias</th>
+<th align="left">RMSE</th>
+<th align="left">Power</th>
+<th align="left">Coverage</th>
+<th align="left">Mean Estimate</th>
+<th align="left">SD Estimate</th>
+<th align="left">Mean Se</th>
+<th align="left">Type S Rate</th>
+<th align="left">Mean Estimand</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">design</td>
+<td align="left">DIM_R</td>
+<td align="left">Z</td>
+<td align="left">50</td>
+<td align="left">0.00</td>
+<td align="left">0.04</td>
+<td align="left">1.00</td>
+<td align="left">1.00</td>
+<td align="left">0.34</td>
+<td align="left">0.04</td>
+<td align="left">0.04</td>
+<td align="left">0.00</td>
+<td align="left">0.33</td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">(0.00)</td>
+<td align="left">(0.00)</td>
+<td align="left">(0.00)</td>
+<td align="left">(0.00)</td>
+<td align="left">(0.01)</td>
+<td align="left">(0.00)</td>
+<td align="left">(0.00)</td>
+<td align="left">(0.00)</td>
+<td align="left">(0.00)</td>
+</tr>
+<tr class="odd">
+<td align="left">design</td>
+<td align="left">DIM_Y</td>
+<td align="left">Z</td>
+<td align="left">50</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">0.08</td>
+<td align="left">NA</td>
+<td align="left">-0.01</td>
+<td align="left">0.16</td>
+<td align="left">0.15</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">(0.04)</td>
+<td align="left">NA</td>
+<td align="left">(0.02)</td>
+<td align="left">(0.02)</td>
+<td align="left">(0.00)</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">design</td>
+<td align="left">DIM_Y</td>
+<td align="left">Z</td>
+<td align="left">50</td>
+<td align="left">-1.01</td>
+<td align="left">1.02</td>
+<td align="left">0.08</td>
+<td align="left">0.00</td>
+<td align="left">-0.01</td>
+<td align="left">0.16</td>
+<td align="left">0.15</td>
+<td align="left">0.75</td>
+<td align="left">1.00</td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">(0.02)</td>
+<td align="left">(0.02)</td>
+<td align="left">(0.04)</td>
+<td align="left">(0.00)</td>
+<td align="left">(0.02)</td>
+<td align="left">(0.02)</td>
+<td align="left">(0.00)</td>
+<td align="left">NA</td>
+<td align="left">(0.00)</td>
+</tr>
+</tbody>
+</table>
+<p>We learn three things from the design diagnosis.</p>
+<ul>
+<li><p>First, as expected, our experiment is unbiased for the average treatment effect on response.</p></li>
+<li><p>Second, our second inquiry, as well as our diagnostics for it, are undefined. The diagnosis tells us that our definition of potential outcomes produces a definition problem for the estimand. Note that some diagnosands are defined, including power. These are diagnosands that depend only on the answer strategy and not on the estimand.</p></li>
+<li><p>The third estimand – the average effects for the <span class="math inline">\(D\)</span> types – <em>is</em> defined but our estimates are biased. The reason for this is that we cannot tell from the data which types are the <span class="math inline">\(D\)</span> types: we are not conditioning on the correct subset. Indeed, we are unable to condition on the correct subset. If a subject responds in the treatment group, we don’t know if she is an <span class="math inline">\(B\)</span> or a <span class="math inline">\(D\)</span> type; in the control group, we can’t tell if a responder is an <span class="math inline">\(A\)</span> or a <span class="math inline">\(D\)</span> type. Our difference-in-means estimator of the ATE on <span class="math inline">\(Y\)</span> among <span class="math inline">\(D\)</span>s will be off whenever <span class="math inline">\(D\)</span>s have different outcomes from <span class="math inline">\(A\)</span>s and <span class="math inline">\(B\)</span>s.</p></li>
+</ul>
+<p>There are some solutions to this problem. In some cases, the problem might be resolved by changing the inquiry. Closely related estimands can often be defined, perhaps by redefining <span class="math inline">\(Y\)</span> (e.g., emails never sent have a tone of zero). Some redefinitions of the problem, as in the one we examine above, require estimating effects for unobserved subgroups which is a difficult challenge.</p>
+</div>
+<div id="other-instances-of-this-problem" class="section level3">
+<h3><span class="header-section-number">3.1.3</span> Other instances of this problem</h3>
+<p>This kind of problem is surprisingly common. Here are three more instances of the problem:</p>
+<ol style="list-style-type: decimal">
+<li><span class="math inline">\(Y\)</span> is the decision to vote Democrat (<span class="math inline">\(Y=1\)</span>) or Republican (<span class="math inline">\(Y=0\)</span>), <span class="math inline">\(R\)</span> is the decision to turn out to vote and <span class="math inline">\(Z\)</span> is a campaign message. The decision to vote may depend on treatment but if subjects do not vote then <span class="math inline">\(Y\)</span> is undefined.</li>
+<li><span class="math inline">\(Y\)</span> is the weight of infants, <span class="math inline">\(R\)</span> is whether a child is born and <span class="math inline">\(Z\)</span> is a maternal health intervention. Fertility may depend on treatment but the weight of unborn (possibly never conceived) babies is not defined.</li>
+<li><span class="math inline">\(Y\)</span> is the charity to whom contributions are made during fundraising and <span class="math inline">\(R\)</span> is whether anything is contributed and <span class="math inline">\(Z\)</span> is an encouragement to contribute. The identity of beneficiaries is not defined if there are no contributions.</li>
+</ol>
+<p>All of these problem exhibit a form of post treatment bias (see section <strong>Post treatment bias</strong>) but the issue goes beyond picking the right estimator. Our problem here is conceptual: the effect of treatment on the outcome just doesn’t exist for some subjects.</p>
+</div>
+<div id="keep-thinking" class="section level3">
+<h3><span class="header-section-number">3.1.4</span> Keep thinking</h3>
+<p>Some puzzles:</p>
+<ol style="list-style-type: decimal">
+<li><p>The amount of bias on the third estimand depends on both the distribution of types and the correlation of types with the potential outcomes of <em>Y</em>. Modify the declaration so that the estimator of the effect on <em>Y</em> is unbiased, changing only the distribution of types. Repeat the exercise, changing only the relation between the types and the potential outcomes of <span class="math inline">\(Y\)</span>.</p></li>
+<li><p>Try approaching the problem by redefining the inquiry, seeking to assess the effect of treatment on the share of responses with positive tone.</p></li>
+</ol>
+
+</div>
+</div>
+<!-- </div> -->
+
+
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="inquiry-principles.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": false,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": false,
+"instapper": false
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": {},
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
