@@ -23,7 +23,7 @@ script:
   - Rscript -e 'bookdown::render_book("index.Rmd", "bookdown::gitbook")'
 
 deploy:
-  local-dir: public
+  local-dir: _book
   provider: pages
   skip-cleanup: true
   github-token: $GITHUB_TOKEN
